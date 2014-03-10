@@ -31,7 +31,7 @@ use Teamspeak3\Adapter\AbstractAdapter;
 use Teamspeak3\Helper\Profiler;
 use Teamspeak3\Helper\Signal;
 use Teamspeak3\Transport\AbstractTransport;
-use Teamspeak3\Adapter\Blacklist\Exception;
+use Teamspeak3\Ts3Exception;
 
 
 /**
@@ -100,7 +100,7 @@ class Blacklist extends AbstractAdapter
      * Returns TRUE if a specified $host IP address is currently blacklisted.
      *
      * @param  string $host
-     * @throws Exception
+     * @throws Ts3Exception
      * @return boolean
      */
     public function isBlacklisted($host)
@@ -109,7 +109,7 @@ class Blacklist extends AbstractAdapter
             $addr = gethostbyname($host);
 
             if ($addr == $host) {
-                throw new Exception("unable to resolve IPv4 address (" . $host . ")");
+                throw new Ts3Exception("unable to resolve IPv4 address (" . $host . ")");
             }
 
             $host = $addr;

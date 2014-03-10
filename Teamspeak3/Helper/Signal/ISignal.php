@@ -27,6 +27,14 @@
 
 namespace Teamspeak3\Helper\Signal;
 
+use Teamspeak3\Adapter\AbstractAdapter;
+use Teamspeak3\Adapter\ServerQuery\Event;
+use Teamspeak3\Adapter\ServerQuery\Reply;
+use Teamspeak3\Node\Host;
+use Teamspeak3\Ts3Exception;
+use Teamspeak3\Adapter\FileTransfer;
+use Teamspeak3\Node\Server;
+
 /**
  * @class ISignal
  * @brief Interface class describing the layout for Signal callbacks.
@@ -42,10 +50,10 @@ interface ISignal
      *   - Signal::getInstance()->subscribe("blacklistConnected", array($object, "onConnect"));
      *   - Signal::getInstance()->subscribe("updateConnected", array($object, "onConnect"));
      *
-     * @param  TeamSpeak3_Adapter_Abstract $adapter
+     * @param  AbstractAdapter $adapter
      * @return void
      */
-    public function onConnect(TeamSpeak3_Adapter_Abstract $adapter);
+    public function onConnect(AbstractAdapter $adapter);
 
     /**
      * Possible callback for '<adapter>Disconnected' signals.
@@ -78,10 +86,10 @@ interface ISignal
      *   - Signal::getInstance()->subscribe("serverqueryCommandFinished", array($object, "onCommandFinished"));
      *
      * @param  string $cmd
-     * @param  TeamSpeak3_Adapter_ServerQuery_Reply $reply
+     * @param  Reply $reply
      * @return void
      */
-    public function onCommandFinished($cmd, TeamSpeak3_Adapter_ServerQuery_Reply $reply);
+    public function onCommandFinished($cmd, Reply $reply);
 
     /**
      * Possible callback for 'notifyEvent' signals.
@@ -89,11 +97,11 @@ interface ISignal
      * === Examples ===
      *   - Signal::getInstance()->subscribe("notifyEvent", array($object, "onEvent"));
      *
-     * @param  TeamSpeak3_Adapter_ServerQuery_Event $event
-     * @param  TeamSpeak3_Node_Host $host
+     * @param  Event $event
+     * @param  Host $host
      * @return void
      */
-    public function onEvent(TeamSpeak3_Adapter_ServerQuery_Event $event, TeamSpeak3_Node_Host $host);
+    public function onEvent(Event $event, Host $host);
 
     /**
      * Possible callback for 'notifyError' signals.
@@ -101,10 +109,10 @@ interface ISignal
      * === Examples ===
      *   - Signal::getInstance()->subscribe("notifyError", array($object, "onError"));
      *
-     * @param  TeamSpeak3_Adapter_ServerQuery_Reply $reply
+     * @param  Reply $reply
      * @return void
      */
-    public function onError(TeamSpeak3_Adapter_ServerQuery_Reply $reply);
+    public function onError(Reply $reply);
 
     /**
      * Possible callback for 'notifyServerselected' signals.
@@ -112,10 +120,10 @@ interface ISignal
      * === Examples ===
      *   - Signal::getInstance()->subscribe("notifyServerselected", array($object, "onServerselected"));
      *
-     * @param  TeamSpeak3_Node_Host $host
+     * @param  Host $host
      * @return void
      */
-    public function onServerselected(TeamSpeak3_Node_Host $host);
+    public function onServerselected(Host $host);
 
     /**
      * Possible callback for 'notifyServercreated' signals.
@@ -123,11 +131,11 @@ interface ISignal
      * === Examples ===
      *   - Signal::getInstance()->subscribe("notifyServercreated", array($object, "onServercreated"));
      *
-     * @param  TeamSpeak3_Node_Host $host
+     * @param  Host $host
      * @param  integer $sid
      * @return void
      */
-    public function onServercreated(TeamSpeak3_Node_Host $host, $sid);
+    public function onServercreated(Host $host, $sid);
 
     /**
      * Possible callback for 'notifyServerdeleted' signals.
@@ -135,11 +143,11 @@ interface ISignal
      * === Examples ===
      *   - Signal::getInstance()->subscribe("notifyServerdeleted", array($object, "onServerdeleted"));
      *
-     * @param  TeamSpeak3_Node_Host $host
+     * @param  Host $host
      * @param  integer $sid
      * @return void
      */
-    public function onServerdeleted(TeamSpeak3_Node_Host $host, $sid);
+    public function onServerdeleted(Host $host, $sid);
 
     /**
      * Possible callback for 'notifyServerstarted' signals.
@@ -147,11 +155,11 @@ interface ISignal
      * === Examples ===
      *   - Signal::getInstance()->subscribe("notifyServerstarted", array($object, "onServerstarted"));
      *
-     * @param  TeamSpeak3_Node_Host $host
+     * @param  Host $host
      * @param  integer $sid
      * @return void
      */
-    public function onServerstarted(TeamSpeak3_Node_Host $host, $sid);
+    public function onServerstarted(Host $host, $sid);
 
     /**
      * Possible callback for 'notifyServerstopped' signals.
@@ -159,11 +167,11 @@ interface ISignal
      * === Examples ===
      *   - Signal::getInstance()->subscribe("notifyServerstopped", array($object, "onServerstopped"));
      *
-     * @param  TeamSpeak3_Node_Host $host
+     * @param  Host $host
      * @param  integer $sid
      * @return void
      */
-    public function onServerstopped(TeamSpeak3_Node_Host $host, $sid);
+    public function onServerstopped(Host $host, $sid);
 
     /**
      * Possible callback for 'notifyServershutdown' signals.
@@ -171,10 +179,10 @@ interface ISignal
      * === Examples ===
      *   - Signal::getInstance()->subscribe("notifyServershutdown", array($object, "onServershutdown"));
      *
-     * @param  TeamSpeak3_Node_Host $host
+     * @param  Host $host
      * @return void
      */
-    public function onServershutdown(TeamSpeak3_Node_Host $host);
+    public function onServershutdown(Host $host);
 
     /**
      * Possible callback for 'notifyLogin' signals.
@@ -182,10 +190,10 @@ interface ISignal
      * === Examples ===
      *   - Signal::getInstance()->subscribe("notifyLogin", array($object, "onLogin"));
      *
-     * @param  TeamSpeak3_Node_Host $host
+     * @param  Host $host
      * @return void
      */
-    public function onLogin(TeamSpeak3_Node_Host $host);
+    public function onLogin(Host $host);
 
     /**
      * Possible callback for 'notifyLogout' signals.
@@ -193,10 +201,10 @@ interface ISignal
      * === Examples ===
      *   - Signal::getInstance()->subscribe("notifyLogout", array($object, "onLogout"));
      *
-     * @param  TeamSpeak3_Node_Host $host
+     * @param  Host $host
      * @return void
      */
-    public function onLogout(TeamSpeak3_Node_Host $host);
+    public function onLogout(Host $host);
 
     /**
      * Possible callback for 'notifyTokencreated' signals.
@@ -204,11 +212,11 @@ interface ISignal
      * === Examples ===
      *   - Signal::getInstance()->subscribe("notifyTokencreated", array($object, "onTokencreated"));
      *
-     * @param  TeamSpeak3_Node_Server $server
+     * @param  Server $server
      * @param  string $token
      * @return void
      */
-    public function onTokencreated(TeamSpeak3_Node_Server $server, $token);
+    public function onTokencreated(Server $server, $token);
 
     /**
      * Possible callback for 'filetransferHandshake' signals.
@@ -216,10 +224,10 @@ interface ISignal
      * === Examples ===
      *   - Signal::getInstance()->subscribe("filetransferHandshake", array($object, "onFtHandshake"));
      *
-     * @param  TeamSpeak3_Adapter_FileTransfer $adapter
+     * @param  FileTransfer $adapter
      * @return void
      */
-    public function onFtHandshake(TeamSpeak3_Adapter_FileTransfer $adapter);
+    public function onFtHandshake(FileTransfer $adapter);
 
     /**
      * Possible callback for 'filetransferUploadStarted' signals.
@@ -337,10 +345,10 @@ interface ISignal
      *   - Signal::getInstance()->subscribe("updateWaitTimeout", array($object, "onWaitTimeout"));
      *
      * @param  integer $time
-     * @param  TeamSpeak3_Adapter_Abstract $adapter
+     * @param  AbstractAdapter $adapter
      * @return void
      */
-    public function onWaitTimeout($time, TeamSpeak3_Adapter_Abstract $adapter);
+    public function onWaitTimeout($time, AbstractAdapter $adapter);
 
     /**
      * Possible callback for 'errorException' signals.
@@ -348,8 +356,8 @@ interface ISignal
      * === Examples ===
      *   - Signal::getInstance()->subscribe("errorException", array($object, "onException"));
      *
-     * @param  TeamSpeak3_Exception $e
+     * @param  Ts3Exception $e
      * @return void
      */
-    public function onException(TeamSpeak3_Exception $e);
+    public function onException(Ts3Exception $e);
 }

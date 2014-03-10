@@ -27,6 +27,15 @@
 
 namespace Teamspeak3\Node;
 
+use Teamspeak3\Adapter\ServerQuery;
+use Teamspeak3\Helper\Convert;
+use Teamspeak3\Helper\Crypt;
+use Teamspeak3\Helper\Signal;
+use Teamspeak3\Helper\String;
+use Teamspeak3\Helper\Uri;
+use Teamspeak3\TeamSpeak3;
+use Teamspeak3\Ts3Exception;
+
 /**
  * @class Host
  * @brief Class describing a TeamSpeak 3 server instance and all it's parameters.
@@ -86,10 +95,10 @@ class Host extends AbstractNode
     /**
      * The Host constructor.
      *
-     * @param  TeamSpeak3_Adapter_ServerQuery $squery
+     * @param  ServerQuery $squery
      * @return Host
      */
-    public function __construct(TeamSpeak3_Adapter_ServerQuery $squery)
+    public function __construct(ServerQuery $squery)
     {
         $this->parent = $squery;
     }
@@ -155,7 +164,7 @@ class Host extends AbstractNode
 
         $this->setStorage("_server_use", array(__FUNCTION__, $getargs));
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("notifyServerselected", $this);
+        Signal::getInstance()->emit("notifyServerselected", $this);
     }
 
     /**
@@ -196,7 +205,7 @@ class Host extends AbstractNode
 
         $this->setStorage("_server_use", array(__FUNCTION__, $getargs));
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("notifyServerselected", $this);
+        Signal::getInstance()->emit("notifyServerselected", $this);
     }
 
     /**
@@ -228,12 +237,13 @@ class Host extends AbstractNode
      * Returns the port of a virtual server matching the given ID.
      *
      * @param  integer $sid
+     * @throws \Teamspeak3\Ts3Exception
      * @return integer
      */
     public function serverGetPortById($sid)
     {
         if (!array_key_exists((string)$sid, $this->serverList())) {
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid serverID", 0x400);
+            throw new Ts3Exception("invalid serverID", 0x400);
         }
 
         return $this->serverList[intval((string)$sid)]["virtualserver_port"];
@@ -279,7 +289,7 @@ class Host extends AbstractNode
      * Returns the first Server object matching the given name.
      *
      * @param  string $name
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return Server
      */
     public function serverGetByName($name)
@@ -290,14 +300,14 @@ class Host extends AbstractNode
             }
         }
 
-        throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid serverID", 0x400);
+        throw new Ts3Exception("invalid serverID", 0x400);
     }
 
     /**
      * Returns the first Server object matching the given unique identifier.
      *
      * @param  string $uid
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return Server
      */
     public function serverGetByUid($uid)
@@ -308,7 +318,7 @@ class Host extends AbstractNode
             }
         }
 
-        throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid serverID", 0x400);
+        throw new Ts3Exception("invalid serverID", 0x400);
     }
 
     /**
@@ -317,13 +327,13 @@ class Host extends AbstractNode
      * domain including a fallback to the third-level domain of the specified $tsdns parameter.
      *
      * @param  string $tsdns
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return Server
      */
     public function serverGetByTSDNS($tsdns)
     {
-        $parts = TeamSpeak3_Helper_Uri::getFQDNParts($tsdns);
-        $query = TeamSpeak3_Helper_String::factory(array_shift($parts));
+        $parts = Uri::getFQDNParts($tsdns);
+        $query = String::factory(array_shift($parts));
 
         while ($part = array_shift($parts)) {
             $query->prepend($part);
@@ -332,7 +342,7 @@ class Host extends AbstractNode
                 $port = TeamSpeak3::factory("tsdns://" . $query . "/?timeout=3")->resolve($tsdns)->section(":", 1);
 
                 return $this->serverGetByPort($port == "" ? 9987 : $port);
-            } catch (TeamSpeak3_Transport_Exception $e) {
+            } catch (Ts3Exception $e) {
                 /* skip "Connection timed out" and "Connection refused" */
                 if ($e->getCode() != 10060 && $e->getCode() != 10061) {
                     throw $e;
@@ -340,7 +350,7 @@ class Host extends AbstractNode
             }
         }
 
-        throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid serverID", 0x400);
+        throw new Ts3Exception("invalid serverID", 0x400);
     }
 
     /**
@@ -357,8 +367,8 @@ class Host extends AbstractNode
         $detail = $this->execute("servercreate", $properties)->toList();
         $server = new Server($this, array("virtualserver_id" => intval($detail["sid"])));
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("notifyServercreated", $this, $detail["sid"]);
-        TeamSpeak3_Helper_Signal::getInstance()->emit("notifyTokencreated", $server, $detail["token"]);
+        Signal::getInstance()->emit("notifyServercreated", $this, $detail["sid"]);
+        Signal::getInstance()->emit("notifyTokencreated", $server, $detail["token"]);
 
         return $detail;
     }
@@ -375,7 +385,7 @@ class Host extends AbstractNode
 
         $this->execute("serverdelete", array("sid" => $sid));
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("notifyServerdeleted", $this, $sid);
+        Signal::getInstance()->emit("notifyServerdeleted", $this, $sid);
     }
 
     /**
@@ -393,7 +403,7 @@ class Host extends AbstractNode
         $this->execute("serverstart", array("sid" => $sid));
         $this->serverListReset();
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("notifyServerstarted", $this, $sid);
+        Signal::getInstance()->emit("notifyServerstarted", $this, $sid);
     }
 
     /**
@@ -411,7 +421,7 @@ class Host extends AbstractNode
         $this->execute("serverstop", array("sid" => $sid));
         $this->serverListReset();
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("notifyServerstopped", $this, $sid);
+        Signal::getInstance()->emit("notifyServerstopped", $this, $sid);
     }
 
     /**
@@ -421,7 +431,7 @@ class Host extends AbstractNode
      */
     public function serverStopProcess()
     {
-        TeamSpeak3_Helper_Signal::getInstance()->emit("notifyServershutdown", $this);
+        Signal::getInstance()->emit("notifyServershutdown", $this);
 
         $this->execute("serverprocessstop");
     }
@@ -547,8 +557,8 @@ class Host extends AbstractNode
         foreach ($this->permissionCats() as $key => $val) {
             $permtree[$val]["permcatid"] = $val;
             $permtree[$val]["permcathex"] = "0x" . dechex($val);
-            $permtree[$val]["permcatname"] = TeamSpeak3_Helper_String::factory(
-                TeamSpeak3_Helper_Convert::permissionCategory($val)
+            $permtree[$val]["permcatname"] = String::factory(
+                Convert::permissionCategory($val)
             );
             $permtree[$val]["permcatparent"] = $permtree[$val]["permcathex"]{3} == 0 ? 0 : hexdec(
                 $permtree[$val]["permcathex"]{2} . 0
@@ -596,13 +606,13 @@ class Host extends AbstractNode
      * Returns the ID of the permission matching the given name.
      *
      * @param  string $name
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return integer
      */
     public function permissionGetIdByName($name)
     {
         if (!array_key_exists((string)$name, $this->permissionList())) {
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid permission ID", 0xA02);
+            throw new Ts3Exception("invalid permission ID", 0xA02);
         }
 
         return $this->permissionList[(string)$name]["permid"];
@@ -612,18 +622,18 @@ class Host extends AbstractNode
      * Returns the name of the permission matching the given ID.
      *
      * @param  integer $permid
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Helper_String
+     * @throws Ts3Exception
+     * @return String
      */
     public function permissionGetNameById($permid)
     {
         foreach ($this->permissionList() as $name => $perm) {
             if ($perm["permid"] == $permid) {
-                return new TeamSpeak3_Helper_String($name);
+                return new Ts3Exception($name);
             }
         }
 
-        throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid permission ID", 0xA02);
+        throw new Ts3Exception("invalid permission ID", 0xA02);
     }
 
     /**
@@ -693,8 +703,8 @@ class Host extends AbstractNode
      * @param  integer $sgtype
      * @param  integer $permid
      * @param  integer $permvalue
-     * @param  integer $permnegated
-     * @param  integer $permskip
+     * @param bool|int $permnegated
+     * @param bool|int $permskip
      * @return void
      */
     public function serverGroupPermAutoAssign($sgtype, $permid, $permvalue, $permnegated = false, $permskip = false)
@@ -821,12 +831,12 @@ class Host extends AbstractNode
         $this->execute("login", array("client_login_name" => $username, "client_login_password" => $password));
         $this->whoamiReset();
 
-        $crypt = new TeamSpeak3_Helper_Crypt($username);
+        $crypt = new Crypt($username);
 
         $this->setStorage("_login_user", $username);
         $this->setStorage("_login_pass", $crypt->encrypt($password));
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("notifyLogin", $this);
+        Signal::getInstance()->emit("notifyLogin", $this);
     }
 
     /**
@@ -842,7 +852,7 @@ class Host extends AbstractNode
         $this->delStorage("_login_user");
         $this->delStorage("_login_pass");
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("notifyLogout", $this);
+        Signal::getInstance()->emit("notifyLogout", $this);
     }
 
     /**
@@ -886,7 +896,7 @@ class Host extends AbstractNode
     {
         $this->whoami();
 
-        $this->whoami[$ident] = (is_numeric($value)) ? intval($value) : TeamSpeak3_Helper_String::factory($value);
+        $this->whoami[$ident] = (is_numeric($value)) ? intval($value) : String::factory($value);
     }
 
     /**
@@ -968,10 +978,10 @@ class Host extends AbstractNode
     protected function fetchPermissionCats()
     {
         $permcats = array();
-        $reflects = new ReflectionClass("TeamSpeak3");
+        $reflects = new \ReflectionClass("TeamSpeak3");
 
         foreach ($reflects->getConstants() as $key => $val) {
-            if (!TeamSpeak3_Helper_String::factory($key)->startsWith("PERM_CAT") || $val == 0xFF) {
+            if (!String::factory($key)->startsWith("PERM_CAT") || $val == 0xFF) {
                 continue;
             }
 
@@ -1133,7 +1143,7 @@ class Host extends AbstractNode
         $password = $this->getStorage("_login_pass");
 
         if ($username && $password) {
-            $crypt = new TeamSpeak3_Helper_Crypt($username);
+            $crypt = new Crypt($username);
 
             $this->login($username, $crypt->decrypt($password));
         }

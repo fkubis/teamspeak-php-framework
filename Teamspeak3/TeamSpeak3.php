@@ -346,7 +346,6 @@ class TeamSpeak3
         // self::loadClass($adapter);
 
         $object = new $adapter($options);
-        var_dump($object);
 
         if ($object instanceof ServerQuery) {
             $node = $object->getHost();
@@ -484,7 +483,7 @@ class TeamSpeak3
             $file = String::factory($node)->toLower();
 
             if ($file->startsWith($name) && $file->endsWith(".php")) {
-                return str_replace(".php", "", $node);
+                return str_replace(".php", "", "Teamspeak3\\Adapter\\" . $node);
             }
         }
 

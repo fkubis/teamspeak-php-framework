@@ -27,7 +27,7 @@
 
 namespace Teamspeak3\Helper;
 
-use Teamspeak3\Helper\Ts3Exception;
+use Teamspeak3\Ts3Exception;
 
 /**
  * @class Uri
@@ -138,7 +138,8 @@ class Uri
     /**
      * Parses the scheme-specific portion of the URI and place its parts into instance variables.
      *
-     * @throws Ts3Exception
+     * @param string $uriString
+     * @throws \Teamspeak3\Ts3Exception
      * @return void
      */
     protected function parseUri($uriString = '')
@@ -499,6 +500,7 @@ class Uri
     /**
      * Returns TRUE if the URI has a query variable.
      *
+     * @param $key
      * @return boolean
      */
     public function hasQueryVar($key)
@@ -698,7 +700,7 @@ class Uri
         }
 
         foreach ($var as $key => $val) {
-            $var[$key] = (is_array($val)) ? stripslashesRecursive($val) : stripslashes(strval($val));
+            $var[$key] = (is_array($val)) ? self::stripslashesRecursive($val) : stripslashes(strval($val));
         }
 
         return $var;

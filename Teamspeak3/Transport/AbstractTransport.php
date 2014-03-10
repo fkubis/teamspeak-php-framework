@@ -27,6 +27,11 @@
 
 namespace Teamspeak3\Transport;
 
+use Teamspeak3\Helper\Signal;
+use Teamspeak3\Helper\String;
+use Teamspeak3\Ts3Exception;
+use Teamspeak3\Adapter\AbstractAdapter;
+
 /**
  * @class AbstractTransport
  * @brief Abstract class for connecting to a TeamSpeak 3 Server through different ways of transport.
@@ -113,7 +118,7 @@ abstract class AbstractTransport
      */
     public function __destruct()
     {
-        if ($this->adapter instanceof TeamSpeak3_Adapter_Abstract) {
+        if ($this->adapter instanceof AbstractAdapter) {
             $this->adapter->__destruct();
         }
 
@@ -140,7 +145,7 @@ abstract class AbstractTransport
      *
      * @param  integer $length
      * @throws Ts3Exception
-     * @return TeamSpeak3_Helper_String
+     * @return String
      */
     abstract public function read($length = 4096);
 
@@ -184,7 +189,7 @@ abstract class AbstractTransport
      * @param  AbstractAdapter $adapter
      * @return void
      */
-    public function setAdapter(TeamSpeak3_Adapter_Abstract $adapter)
+    public function setAdapter(AbstractAdapter $adapter)
     {
         $this->adapter = $adapter;
     }
@@ -206,8 +211,8 @@ abstract class AbstractTransport
      */
     public function getAdapterType()
     {
-        if ($this->adapter instanceof TeamSpeak3_Adapter_Abstract) {
-            $string = TeamSpeak3_Helper_String::factory(get_class($this->adapter));
+        if ($this->adapter instanceof AbstractAdapter) {
+            $string = String::factory(get_class($this->adapter));
 
             return $string->substr($string->findLast("_"))->replace(array("_", " "), "")->toString();
         }
@@ -258,7 +263,7 @@ abstract class AbstractTransport
             $null = null;
 
             if ($time) {
-                TeamSpeak3_Helper_Signal::getInstance()->emit(
+                Signal::getInstance()->emit(
                     strtolower($this->getAdapterType()) . "WaitTimeout",
                     $time,
                     $this->getAdapter()

@@ -27,6 +27,9 @@
 
 namespace Teamspeak3\Helper;
 
+use Teamspeak3\Helper\Signal\Handler;
+use Teamspeak3\Ts3Exception;
+
 /**
  * @class Signal
  * @brief Helper class for signal slots.
@@ -76,13 +79,14 @@ class Signal
      * Generates a MD5 hash based on a given callback.
      *
      * @param  mixed $callback
-     * @param  string
-     * @return void
+     * @throws \Teamspeak3\Ts3Exception
+     * @internal param $string
+     * @return string
      */
     public function getCallbackHash($callback)
     {
         if (!is_callable($callback, true, $callable_name)) {
-            throw new TeamSpeak3_Helper_Signal_Exception("invalid callback specified");
+            throw new Ts3Exception("invalid callback specified");
         }
 
         return md5($callable_name);
@@ -93,7 +97,7 @@ class Signal
      *
      * @param  string $signal
      * @param  mixed $callback
-     * @return TeamSpeak3_Helper_Signal_Handler
+     * @return Handler
      */
     public function subscribe($signal, $callback)
     {
@@ -104,7 +108,7 @@ class Signal
         $index = $this->getCallbackHash($callback);
 
         if (!array_key_exists($index, $this->sigslots[$signal])) {
-            $this->sigslots[$signal][$index] = new TeamSpeak3_Helper_Signal_Handler($signal, $callback);
+            $this->sigslots[$signal][$index] = new Handler($signal, $callback);
         }
 
         return $this->sigslots[$signal][$index];

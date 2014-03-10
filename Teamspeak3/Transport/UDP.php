@@ -27,6 +27,10 @@
 
 namespace Teamspeak3\Transport;
 
+use Teamspeak3\Helper\Signal;
+use Teamspeak3\Helper\String;
+use Teamspeak3\Ts3Exception;
+
 /**
  * @class UDP
  * @brief Class for connecting to a remote server through UDP.
@@ -55,7 +59,7 @@ class UDP extends AbstractTransport
 
         if ($this->stream === false) {
             throw new Ts3Exception(
-                TeamSpeak3_Helper_String::factory($errstr)->toUtf8()->toString(),
+                String::factory($errstr)->toUtf8()->toString(),
                 $errno
             );
         }
@@ -77,7 +81,7 @@ class UDP extends AbstractTransport
 
         $this->stream = null;
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "Disconnected");
+        Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "Disconnected");
     }
 
     /**
@@ -94,7 +98,7 @@ class UDP extends AbstractTransport
 
         $data = @fread($this->stream, $length);
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataRead", $data);
+        Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataRead", $data);
 
         if ($data === false) {
             throw new Ts3Exception(
@@ -102,7 +106,7 @@ class UDP extends AbstractTransport
             );
         }
 
-        return new TeamSpeak3_Helper_String($data);
+        return new String($data);
     }
 
     /**
@@ -117,6 +121,6 @@ class UDP extends AbstractTransport
 
         @stream_socket_sendto($this->stream, $data);
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataSend", $data);
+        Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataSend", $data);
     }
 }

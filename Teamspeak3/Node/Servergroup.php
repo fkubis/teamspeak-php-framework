@@ -27,6 +27,10 @@
 
 namespace Teamspeak3\Node;
 
+use Teamspeak3\TeamSpeak3;
+use Teamspeak3\Helper\String;
+use Teamspeak3\Ts3Exception;
+
 /**
  * @class Servergroup
  * @brief Class describing a TeamSpeak 3 server group and all it's parameters.
@@ -109,8 +113,8 @@ class Servergroup extends AbstractNode
      *
      * @param  integer $permid
      * @param  integer $permvalue
-     * @param  integer $permnegated
-     * @param  integer $permskip
+     * @param bool|int $permnegated
+     * @param bool|int $permskip
      * @return void
      */
     public function permAssign($permid, $permvalue, $permnegated = false, $permskip = false)
@@ -198,7 +202,7 @@ class Servergroup extends AbstractNode
      *
      * @param  string $description
      * @param  string $customset
-     * @return TeamSpeak3_Helper_String
+     * @return String
      */
     public function privilegeKeyCreate($description = null, $customset = null)
     {
@@ -215,6 +219,8 @@ class Servergroup extends AbstractNode
      * Sends a text message to all clients residing in the server group on the virtual server.
      *
      * @param  string $msg
+     * @throws \Exception
+     * @throws \Teamspeak3\Ts3Exception
      * @return void
      */
     public function message($msg)
@@ -225,7 +231,7 @@ class Servergroup extends AbstractNode
                     "sendtextmessage",
                     array("msg" => $msg, "target" => $client, "targetmode" => TeamSpeak3::TEXTMSG_CLIENT)
                 );
-            } catch (TeamSpeak3_Adapter_ServerQuery_Exception $e) {
+            } catch (Ts3Exception $e) {
                 /* ERROR_client_invalid_id */
                 if ($e->getCode() != 0x0200) {
                     throw $e;
@@ -237,7 +243,7 @@ class Servergroup extends AbstractNode
     /**
      * Downloads and returns the server groups icon file content.
      *
-     * @return TeamSpeak3_Helper_String
+     * @return String
      */
     public function iconDownload()
     {

@@ -30,7 +30,7 @@ namespace Teamspeak3\Adapter\ServerQuery;
 use Teamspeak3\Helper\String;
 use Teamspeak3\Node\Host;
 use Teamspeak3\TeamSpeak3;
-use Teamspeak3\Adapter\ServerQuery\Ts3Exception;
+use Teamspeak3\Ts3Exception;
 use Teamspeak3\Helper\Signal;
 use \ArrayObject;
 

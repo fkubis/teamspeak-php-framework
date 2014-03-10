@@ -27,7 +27,7 @@
 
 namespace Teamspeak3\Adapter;
 
-use Teamspeak3\Adapter\Update\Ts3Exception;
+use Teamspeak3\Ts3Exception;
 use Teamspeak3\Helper\Profiler;
 use Teamspeak3\Helper\Signal;
 use Teamspeak3\Helper\String;

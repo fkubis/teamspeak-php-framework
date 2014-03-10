@@ -27,6 +27,16 @@
 
 namespace Teamspeak3\Node;
 
+use \RecursiveIterator;
+use \ArrayAccess;
+use \Countable;
+use Teamspeak3\Adapter\ServerQuery\Reply;
+use Teamspeak3\Adapter\ServerQuery;
+use Teamspeak3\Helper\Convert;
+use Teamspeak3\Helper\String;
+use Teamspeak3\Ts3Exception;
+use Teamspeak3\Viewer\IViewer;
+
 /**
  * @class AbstractNode
  * @brief Abstract class describing a TeamSpeak 3 node and all it's parameters.
@@ -68,7 +78,7 @@ abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
      *
      * @param  string $cmd
      * @param  boolean $throw
-     * @return TeamSpeak3_Adapter_ServerQuery_Reply
+     * @return Reply
      */
     public function request($cmd, $throw = true)
     {
@@ -80,7 +90,7 @@ abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
      *
      * @param  string $cmd
      * @param  array $params
-     * @return TeamSpeak3_Helper_String
+     * @return String
      */
     public function prepare($cmd, array $params = array())
     {
@@ -92,7 +102,7 @@ abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
      *
      * @param  string $cmd
      * @param  array $params
-     * @return TeamSpeak3_Adapter_ServerQuery_Reply
+     * @return Reply
      */
     public function execute($cmd, array $params = array())
     {
@@ -102,7 +112,7 @@ abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
     /**
      * Returns the parent object of the current node.
      *
-     * @return TeamSpeak3_Adapter_ServerQuery
+     * @return ServerQuery
      * @return AbstractNode
      */
     public function getParent()
@@ -135,13 +145,13 @@ abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
      * Returns the internal path of the node icon.
      *
      * @param  string $key
-     * @return TeamSpeak3_Helper_String
+     * @return String
      */
     public function iconGetName($key)
     {
         $iconid = ($this[$key] < 0) ? (pow(2, 32)) - ($this[$key] * -1) : $this[$key];
 
-        return new TeamSpeak3_Helper_String("/icon_" . $iconid);
+        return new String("/icon_" . $iconid);
     }
 
     /**
@@ -158,7 +168,7 @@ abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
             return $prefix . "query";
         }
 
-        return $prefix . TeamSpeak3_Helper_String::factory(get_class($this))->section("_", 2)->toLower();
+        return $prefix . String::factory(get_class($this))->section("_", 2)->toLower();
     }
 
     /**
@@ -185,14 +195,14 @@ abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
     /**
      * Returns the HTML code to display a TeamSpeak 3 viewer.
      *
-     * @param  TeamSpeak3_Viewer_Interface $viewer
+     * @param  IViewer $viewer
      * @return string
      */
-    public function getViewer(TeamSpeak3_Viewer_Interface $viewer)
+    public function getViewer(IViewer $viewer)
     {
         $html = $viewer->fetchObject($this);
 
-        $iterator = new RecursiveIteratorIterator($this, RecursiveIteratorIterator::SELF_FIRST);
+        $iterator = new \RecursiveIteratorIterator($this, \RecursiveIteratorIterator::SELF_FIRST);
 
         foreach ($iterator as $node) {
             $siblings = array();
@@ -229,7 +239,7 @@ abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
                 $match = true;
 
                 foreach ($props as $key => $val) {
-                    if ($val instanceof TeamSpeak3_Helper_String) {
+                    if ($val instanceof String) {
                         $match = $val->contains($rules[$key], true);
                     } else {
                         $match = $val == $rules[$key];
@@ -263,20 +273,20 @@ abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
             $info = $this->nodeInfo;
 
             foreach ($info as $key => $val) {
-                $key = TeamSpeak3_Helper_String::factory($key);
+                $key = String::factory($key);
 
                 if ($key->contains("_bytes_")) {
-                    $info[$key->toString()] = TeamSpeak3_Helper_Convert::bytes($val);
+                    $info[$key->toString()] = Convert::bytes($val);
                 } elseif ($key->contains("_bandwidth_")) {
-                    $info[$key->toString()] = TeamSpeak3_Helper_Convert::bytes($val) . "/s";
+                    $info[$key->toString()] = Convert::bytes($val) . "/s";
                 } elseif ($key->contains("_packets_")) {
                     $info[$key->toString()] = number_format($val, null, null, ".");
                 } elseif ($key->contains("_packetloss_")) {
                     $info[$key->toString()] = sprintf("%01.2f", floatval($val->toString()) * 100) . "%";
                 } elseif ($key->endsWith("_uptime")) {
-                    $info[$key->toString()] = TeamSpeak3_Helper_Convert::seconds($val);
+                    $info[$key->toString()] = Convert::seconds($val);
                 } elseif ($key->endsWith("_version")) {
-                    $info[$key->toString()] = TeamSpeak3_Helper_Convert::version($val);
+                    $info[$key->toString()] = Convert::version($val);
                 } elseif ($key->endsWith("_icon_id")) {
                     $info[$key->toString()] = $this->iconGetName($key)->filterDigits();
                 }
@@ -553,7 +563,7 @@ abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
         }
 
         if (!$this->offsetExists($offset)) {
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid parameter", 0x602);
+            throw new Ts3Exception("invalid parameter", 0x602);
         }
 
         return $this->nodeInfo[(string)$offset];

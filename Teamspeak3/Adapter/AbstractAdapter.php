@@ -27,6 +27,9 @@
 
 namespace Teamspeak3\Adapter;
 
+use Teamspeak3\Ts3Exception;
+use Teamspeak3\Transport\TCP;
+use Teamspeak3\Transport\UDP;
 use Teamspeak3\Transport\AbstractTransport;
 use Teamspeak3\Helper\Profiler;
 use Teamspeak3\Helper\Profiler\Timer;
@@ -136,8 +139,10 @@ abstract class AbstractAdapter
         if (!is_array($options)) {
             throw new Ts3Exception("transport parameters must provided in an array");
         }
-
-        $this->transport = new $transport($options);
+        if($transport == "TCP")
+            $this->transport = new TCP($options);
+        else
+            $this->transport = new UDP($options);
     }
 
     /**

@@ -27,7 +27,7 @@
 
 namespace Teamspeak3\Helper;
 
-use Teamspeak3\Helper\Ts3Exception;
+use Teamspeak3\Ts3Exception;
 
 /**
  * @class Char

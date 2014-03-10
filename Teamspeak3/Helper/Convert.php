@@ -28,7 +28,6 @@
 namespace Teamspeak3\Helper;
 
 use Teamspeak3\TeamSpeak3;
-use Teamspeak3\Helper\String;
 
 
 /**

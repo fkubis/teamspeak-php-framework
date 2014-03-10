@@ -31,7 +31,7 @@ use Teamspeak3\Adapter\AbstractAdapter;
 use Teamspeak3\Helper\Profiler;
 use Teamspeak3\Helper\Signal;
 use Teamspeak3\Transport\AbstractTransport;
-use Teamspeak3\Adapter\FileTransfer\Ts3Exception;
+use Teamspeak3\Ts3Exception;
 use Teamspeak3\Helper\String;
 
 /**

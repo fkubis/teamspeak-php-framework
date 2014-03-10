@@ -27,6 +27,11 @@
 
 namespace Teamspeak3\Node;
 
+use Teamspeak3\Adapter\ServerQuery\Reply;
+use Teamspeak3\Helper\String;
+use Teamspeak3\TeamSpeak3;
+use Teamspeak3\Ts3Exception;
+
 /**
  * @class Server
  * @brief Class describing a TeamSpeak 3 virtual server and all it's parameters.
@@ -59,7 +64,7 @@ class Server extends AbstractNode
      * @param  Host $host
      * @param  array $info
      * @param  string $index
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return Server
      */
     public function __construct(Host $host, array $info, $index = "virtualserver_id")
@@ -68,7 +73,7 @@ class Server extends AbstractNode
         $this->nodeInfo = $info;
 
         if (!array_key_exists($index, $this->nodeInfo)) {
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid serverID", 0x400);
+            throw new Ts3Exception("invalid serverID", 0x400);
         }
 
         $this->nodeId = $this->nodeInfo[$index];
@@ -79,7 +84,7 @@ class Server extends AbstractNode
      *
      * @param  string $cmd
      * @param  boolean $throw
-     * @return TeamSpeak3_Adapter_ServerQuery_Reply
+     * @return Reply
      */
     public function request($cmd, $throw = true)
     {
@@ -199,7 +204,7 @@ class Server extends AbstractNode
      * @param  integer $align
      * @param  integer $order
      * @param  integer $maxclients
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return integer
      */
     public function channelSpacerCreate(
@@ -239,7 +244,7 @@ class Server extends AbstractNode
                 break;
 
             default:
-                throw new TeamSpeak3_Adapter_ServerQuery_Exception("missing required parameter", 0x606);
+                throw new Ts3Exception("missing required parameter", 0x606);
                 break;
         }
 
@@ -276,7 +281,7 @@ class Server extends AbstractNode
      * Returns the possible type of a channel spacer.
      *
      * @param  integer $cid
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return integer
      */
     public function channelSpacerGetType($cid)
@@ -284,7 +289,7 @@ class Server extends AbstractNode
         $channel = $this->channelGetById($cid);
 
         if (!$this->channelIsSpacer($channel)) {
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid channel flags", 0x307);
+            throw new Ts3Exception("invalid channel flags", 0x307);
         }
 
         switch ($channel["channel_name"]->section("]", 1)) {
@@ -312,7 +317,7 @@ class Server extends AbstractNode
      * Returns the possible alignment of a channel spacer.
      *
      * @param  integer $cid
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return integer
      */
     public function channelSpacerGetAlign($cid)
@@ -325,7 +330,7 @@ class Server extends AbstractNode
                 $matches
             ) || !isset($matches[1])
         ) {
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid channel flags", 0x307);
+            throw new Ts3Exception("invalid channel flags", 0x307);
         }
 
         switch ($matches[1]) {
@@ -472,7 +477,7 @@ class Server extends AbstractNode
             $files[$i]["sid"] = $this->getId();
             $files[$i]["cid"] = $files[0]["cid"];
             $files[$i]["path"] = $files[0]["path"];
-            $files[$i]["src"] = new TeamSpeak3_Helper_String($cid ? $files[$i]["path"] : "/");
+            $files[$i]["src"] = new String($cid ? $files[$i]["path"] : "/");
 
             if (!$files[$i]["src"]->endsWith("/")) {
                 $files[$i]["src"]->append("/");
@@ -601,13 +606,13 @@ class Server extends AbstractNode
      * Returns the Channel object matching the given ID.
      *
      * @param  integer $cid
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return Channel
      */
     public function channelGetById($cid)
     {
         if (!array_key_exists((string)$cid, $this->channelList())) {
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid channelID", 0x300);
+            throw new Ts3Exception("invalid channelID", 0x300);
         }
 
         return $this->channelList[intval((string)$cid)];
@@ -617,7 +622,7 @@ class Server extends AbstractNode
      * Returns the Channel object matching the given name.
      *
      * @param  string $name
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return Channel
      */
     public function channelGetByName($name)
@@ -628,7 +633,7 @@ class Server extends AbstractNode
             }
         }
 
-        throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid channelID", 0x300);
+        throw new Ts3Exception("invalid channelID", 0x300);
     }
 
     /**
@@ -753,13 +758,13 @@ class Server extends AbstractNode
      * Returns the Client object matching the given ID.
      *
      * @param  integer $clid
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return Client
      */
     public function clientGetById($clid)
     {
         if (!array_key_exists((string)$clid, $this->clientList())) {
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid clientID", 0x200);
+            throw new Ts3Exception("invalid clientID", 0x200);
         }
 
         return $this->clientList[intval((string)$clid)];
@@ -769,7 +774,7 @@ class Server extends AbstractNode
      * Returns the Client object matching the given name.
      *
      * @param  string $name
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return Client
      */
     public function clientGetByName($name)
@@ -780,14 +785,14 @@ class Server extends AbstractNode
             }
         }
 
-        throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid clientID", 0x200);
+        throw new Ts3Exception("invalid clientID", 0x200);
     }
 
     /**
      * Returns the Client object matching the given unique identifier.
      *
      * @param  string $uid
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return Client
      */
     public function clientGetByUid($uid)
@@ -798,14 +803,14 @@ class Server extends AbstractNode
             }
         }
 
-        throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid clientID", 0x200);
+        throw new Ts3Exception("invalid clientID", 0x200);
     }
 
     /**
      * Returns the Client object matching the given database ID.
      *
      * @param  integer $dbid
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return Client
      */
     public function clientGetByDbid($dbid)
@@ -816,7 +821,7 @@ class Server extends AbstractNode
             }
         }
 
-        throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid clientID", 0x200);
+        throw new Ts3Exception("invalid clientID", 0x200);
     }
 
     /**
@@ -1143,13 +1148,13 @@ class Server extends AbstractNode
      * Returns the Servergroup object matching the given ID.
      *
      * @param  integer $sgid
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return Servergroup
      */
     public function serverGroupGetById($sgid)
     {
         if (!array_key_exists((string)$sgid, $this->serverGroupList())) {
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid groupID", 0xA00);
+            throw new Ts3Exception("invalid groupID", 0xA00);
         }
 
         return $this->sgroupList[intval((string)$sgid)];
@@ -1160,7 +1165,7 @@ class Server extends AbstractNode
      *
      * @param  string $name
      * @param  integer $type
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return Servergroup
      */
     public function serverGroupGetByName($name, $type = TeamSpeak3::GROUP_DBTYPE_REGULAR)
@@ -1171,7 +1176,7 @@ class Server extends AbstractNode
             }
         }
 
-        throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid groupID", 0xA00);
+        throw new Ts3Exception("invalid groupID", 0xA00);
     }
 
     /**
@@ -1326,7 +1331,7 @@ class Server extends AbstractNode
             try {
                 $perms = $this->serverGroupPermList($sgid, true);
                 $grant = isset($perms["i_permission_modify_power"]) ? $perms["i_permission_modify_power"]["permvalue"] : null;
-            } catch (TeamSpeak3_Adapter_ServerQuery_Exception $e) {
+            } catch (Ts3Exception $e) {
                 /* ERROR_database_empty_result */
                 if ($e->getCode() != 0x501) {
                     throw $e;
@@ -1478,13 +1483,13 @@ class Server extends AbstractNode
      * Returns the Channelgroug object matching the given ID.
      *
      * @param  integer $cgid
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return Channelgroug
      */
     public function channelGroupGetById($cgid)
     {
         if (!array_key_exists((string)$cgid, $this->channelGroupList())) {
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid groupID", 0xA00);
+            throw new Ts3Exception("invalid groupID", 0xA00);
         }
 
         return $this->cgroupList[intval((string)$cgid)];
@@ -1495,7 +1500,7 @@ class Server extends AbstractNode
      *
      * @param  string $name
      * @param  integer $type
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return Channelgroug
      */
     public function channelGroupGetByName($name, $type = TeamSpeak3::GROUP_DBTYPE_REGULAR)
@@ -1506,7 +1511,7 @@ class Server extends AbstractNode
             }
         }
 
-        throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid groupID", 0xA00);
+        throw new Ts3Exception("invalid groupID", 0xA00);
     }
 
     /**
@@ -1634,7 +1639,7 @@ class Server extends AbstractNode
                     break;
 
                 default:
-                    throw new TeamSpeak3_Adapter_ServerQuery_Exception("convert error", 0x604);
+                    throw new Ts3Exception("convert error", 0x604);
             }
         }
 
@@ -1651,7 +1656,7 @@ class Server extends AbstractNode
      * @param  string $cpw
      * @param  boolean $overwrite
      * @param  boolean $resume
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return array
      */
     public function transferInitUpload($clientftfid, $cid, $name, $size, $cpw = "", $overwrite = false, $resume = false)
@@ -1670,7 +1675,7 @@ class Server extends AbstractNode
         )->toList();
 
         if (array_key_exists("status", $upload) && $upload["status"] != 0x00) {
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception($upload["msg"], $upload["status"]);
+            throw new Ts3Exception($upload["msg"], $upload["status"]);
         }
 
         $upload["cid"] = $cid;
@@ -1697,7 +1702,7 @@ class Server extends AbstractNode
      * @param  string $name
      * @param  string $cpw
      * @param  integer $seekpos
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return array
      */
     public function transferInitDownload($clientftfid, $cid, $name, $cpw = "", $seekpos = 0)
@@ -1708,7 +1713,7 @@ class Server extends AbstractNode
         )->toList();
 
         if (array_key_exists("status", $download) && $download["status"] != 0x00) {
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception($download["msg"], $download["status"]);
+            throw new Ts3Exception($download["msg"], $download["status"]);
         }
 
         $download["cid"] = $cid;
@@ -2440,14 +2445,14 @@ class Server extends AbstractNode
             return 0;
 
             /* workaround for PHP bug #50688 */
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid parameter", 0x602);
+            throw new Ts3Exception("invalid parameter", 0x602);
         }
 
         if (!$a instanceof Client) {
             return 0;
 
             /* workaround for PHP bug #50688 */
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception("convert error", 0x604);
+            throw new Ts3Exception("convert error", 0x604);
         }
 
         if ($a->getProperty("client_talk_power", 0) != $b->getProperty("client_talk_power", 0)) {
@@ -2474,14 +2479,14 @@ class Server extends AbstractNode
             return 0;
 
             /* workaround for PHP bug #50688 */
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid parameter", 0x602);
+            throw new Ts3Exception("invalid parameter", 0x602);
         }
 
         if (!$a instanceof Servergroup && !$a instanceof Channelgroug) {
             return 0;
 
             /* workaround for PHP bug #50688 */
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception("convert error", 0x604);
+            throw new Ts3Exception("convert error", 0x604);
         }
 
         if ($a->getProperty("sortid", 0) != $b->getProperty("sortid", 0) && $a->getProperty(
@@ -2500,6 +2505,7 @@ class Server extends AbstractNode
      *
      * @param  array $a
      * @param  array $b
+     * @throws \Teamspeak3\Ts3Exception
      * @return integer
      */
     protected static function sortFileList(array $a, array $b)
@@ -2511,7 +2517,7 @@ class Server extends AbstractNode
         ) {
             return 0;
 
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid parameter", 0x602);
+            throw new Ts3Exception("invalid parameter", 0x602);
         }
 
         if ($a["type"] != $b["type"]) {

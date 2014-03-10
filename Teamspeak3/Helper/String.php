@@ -182,8 +182,8 @@ class String implements ArrayAccess, Iterator, Countable
      * Returns true if the string contains $pattern.
      *
      * @param  string $pattern
-     * @param  booean $regexp
-     * @return boolean
+     * @param bool $regexp
+     * @return bool
      */
     public function contains($pattern, $regexp = false)
     {

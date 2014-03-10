@@ -27,6 +27,8 @@
 
 namespace Teamspeak3\Helper\Signal;
 
+use Teamspeak3\Ts3Exception;
+
 /**
  * @class Handler
  * @brief Helper class providing handler functions for signals.

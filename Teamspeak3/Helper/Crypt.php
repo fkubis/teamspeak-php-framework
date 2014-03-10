@@ -27,6 +27,8 @@
 
 namespace Teamspeak3\Helper;
 
+use Teamspeak3\Ts3Exception;
+
 /**
  * @class Crypt
  * @brief Helper class for data encryption.
@@ -151,7 +153,7 @@ class Crypt
      * Sets the secret key using the specified pasphrase.
      *
      * @param  string $passphrase
-     * @throws Habitat_Exception
+     * @throws \Teamspeak3\Ts3Exception
      * @return void
      */
     protected function setSecretKey($passphrase)

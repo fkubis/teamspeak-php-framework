@@ -87,7 +87,7 @@ class Profiler
      * Returns a timer.
      *
      * @param  string $name
-     * @return TeamSpeak3_Helper_Profiler_Timer
+     * @return Timer
      */
     public static function get($name = "default")
     {
