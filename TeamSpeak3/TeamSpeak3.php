@@ -483,7 +483,7 @@ class TeamSpeak3
             $file = String::factory($node)->toLower();
 
             if ($file->startsWith($name) && $file->endsWith(".php")) {
-                return str_replace(".php", "", "Teamspeak3\\Adapter\\" . $node);
+                return str_replace(".php", "", "TeamSpeak3\\Adapter\\" . $node);
             }
         }
 
