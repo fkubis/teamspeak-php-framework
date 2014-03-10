@@ -25,11 +25,11 @@
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
 
-namespace Teamspeak3\Transport;
+namespace TeamSpeak3\Transport;
 
-use Teamspeak3\Helper\Signal;
-use Teamspeak3\Helper\String;
-use Teamspeak3\Ts3Exception;
+use TeamSpeak3\Helper\Signal;
+use TeamSpeak3\Helper\String;
+use TeamSpeak3\Ts3Exception;
 
 /**
  * @class UDP

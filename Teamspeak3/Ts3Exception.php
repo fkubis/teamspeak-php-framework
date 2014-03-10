@@ -25,10 +25,10 @@
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
 
-namespace Teamspeak3;
+namespace TeamSpeak3;
 
-use Teamspeak3\Helper\Signal;
-use Teamspeak3\Helper\String;
+use TeamSpeak3\Helper\Signal;
+use TeamSpeak3\Helper\String;
 
 
 /**

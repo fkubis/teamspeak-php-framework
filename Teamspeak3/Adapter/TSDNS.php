@@ -25,13 +25,13 @@
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
 
-namespace Teamspeak3\Adapter;
+namespace TeamSpeak3\Adapter;
 
-use Teamspeak3\Helper\Profiler;
-use Teamspeak3\Helper\Signal;
-use Teamspeak3\Transport\AbstractTransport;
-use Teamspeak3\Ts3Exception;
-use Teamspeak3\Helper\String;
+use TeamSpeak3\Helper\Profiler;
+use TeamSpeak3\Helper\Signal;
+use TeamSpeak3\Transport\AbstractTransport;
+use TeamSpeak3\Ts3Exception;
+use TeamSpeak3\Helper\String;
 
 /**
  * @class TSDNS

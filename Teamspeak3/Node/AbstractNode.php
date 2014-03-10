@@ -25,17 +25,17 @@
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
 
-namespace Teamspeak3\Node;
+namespace TeamSpeak3\Node;
 
 use \RecursiveIterator;
 use \ArrayAccess;
 use \Countable;
-use Teamspeak3\Adapter\ServerQuery\Reply;
-use Teamspeak3\Adapter\ServerQuery;
-use Teamspeak3\Helper\Convert;
-use Teamspeak3\Helper\String;
-use Teamspeak3\Ts3Exception;
-use Teamspeak3\Viewer\IViewer;
+use TeamSpeak3\Adapter\ServerQuery\Reply;
+use TeamSpeak3\Adapter\ServerQuery;
+use TeamSpeak3\Helper\Convert;
+use TeamSpeak3\Helper\String;
+use TeamSpeak3\Ts3Exception;
+use TeamSpeak3\Viewer\IViewer;
 
 /**
  * @class AbstractNode

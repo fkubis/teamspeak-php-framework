@@ -25,7 +25,7 @@
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
 
-namespace Teamspeak3\Viewer;
+namespace TeamSpeak3\Viewer;
 
 /**
  * @class Html

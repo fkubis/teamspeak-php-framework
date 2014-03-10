@@ -25,15 +25,15 @@
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
 
-namespace Teamspeak3\Helper\Signal;
+namespace TeamSpeak3\Helper\Signal;
 
-use Teamspeak3\Adapter\AbstractAdapter;
-use Teamspeak3\Adapter\ServerQuery\Event;
-use Teamspeak3\Adapter\ServerQuery\Reply;
-use Teamspeak3\Node\Host;
-use Teamspeak3\Ts3Exception;
-use Teamspeak3\Adapter\FileTransfer;
-use Teamspeak3\Node\Server;
+use TeamSpeak3\Adapter\AbstractAdapter;
+use TeamSpeak3\Adapter\ServerQuery\Event;
+use TeamSpeak3\Adapter\ServerQuery\Reply;
+use TeamSpeak3\Node\Host;
+use TeamSpeak3\Ts3Exception;
+use TeamSpeak3\Adapter\FileTransfer;
+use TeamSpeak3\Node\Server;
 
 /**
  * @class ISignal

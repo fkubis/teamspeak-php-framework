@@ -25,11 +25,11 @@
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
 
-namespace Teamspeak3\Node;
+namespace TeamSpeak3\Node;
 
-use Teamspeak3\TeamSpeak3;
-use Teamspeak3\Helper\String;
-use Teamspeak3\Ts3Exception;
+use TeamSpeak3\TeamSpeak3;
+use TeamSpeak3\Helper\String;
+use TeamSpeak3\Ts3Exception;
 
 /**
  * @class Servergroup

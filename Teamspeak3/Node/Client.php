@@ -25,7 +25,7 @@
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
 
-namespace Teamspeak3\Node;
+namespace TeamSpeak3\Node;
 
 /**
  * @class Client

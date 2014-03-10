@@ -25,16 +25,16 @@
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
 
-namespace Teamspeak3\Node;
+namespace TeamSpeak3\Node;
 
-use Teamspeak3\Adapter\ServerQuery;
-use Teamspeak3\Helper\Convert;
-use Teamspeak3\Helper\Crypt;
-use Teamspeak3\Helper\Signal;
-use Teamspeak3\Helper\String;
-use Teamspeak3\Helper\Uri;
-use Teamspeak3\TeamSpeak3;
-use Teamspeak3\Ts3Exception;
+use TeamSpeak3\Adapter\ServerQuery;
+use TeamSpeak3\Helper\Convert;
+use TeamSpeak3\Helper\Crypt;
+use TeamSpeak3\Helper\Signal;
+use TeamSpeak3\Helper\String;
+use TeamSpeak3\Helper\Uri;
+use TeamSpeak3\TeamSpeak3;
+use TeamSpeak3\Ts3Exception;
 
 /**
  * @class Host

@@ -25,13 +25,13 @@
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
 
-namespace Teamspeak3\Adapter\ServerQuery;
+namespace TeamSpeak3\Adapter\ServerQuery;
 
-use Teamspeak3\Helper\String;
-use Teamspeak3\Node\Host;
-use Teamspeak3\TeamSpeak3;
-use Teamspeak3\Helper\Signal;
-use Teamspeak3\Ts3Exception;
+use TeamSpeak3\Helper\String;
+use TeamSpeak3\Node\Host;
+use TeamSpeak3\TeamSpeak3;
+use TeamSpeak3\Helper\Signal;
+use TeamSpeak3\Ts3Exception;
 
 use ArrayAccess;
 

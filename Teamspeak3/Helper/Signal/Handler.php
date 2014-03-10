@@ -25,9 +25,9 @@
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
 
-namespace Teamspeak3\Helper\Signal;
+namespace TeamSpeak3\Helper\Signal;
 
-use Teamspeak3\Ts3Exception;
+use TeamSpeak3\Ts3Exception;
 
 /**
  * @class Handler

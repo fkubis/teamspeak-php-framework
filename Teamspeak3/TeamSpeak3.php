@@ -25,25 +25,25 @@
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
 
-namespace Teamspeak3;
+namespace TeamSpeak3;
 
-use Teamspeak3\Ts3Exception;
-use Teamspeak3\Adapter\AbstractAdapter;
-use Teamspeak3\Adapter\Blacklist;
-use Teamspeak3\Adapter\FileTransfer;
-use Teamspeak3\Adapter\ServerQuery;
-use Teamspeak3\Adapter\TSDNS;
-use Teamspeak3\Adapter\Update;
-use Teamspeak3\Helper\Uri;
-use Teamspeak3\Helper\String;
-use Teamspeak3\Helper\Profiler;
-use Teamspeak3\Node\AbstractNode;
-use Teamspeak3\Node\Channel;
-use Teamspeak3\Node\Channelgroug;
-use Teamspeak3\Node\Client;
-use Teamspeak3\Node\Host;
-use Teamspeak3\Node\Server;
-use Teamspeak3\Node\Servergroup;
+use TeamSpeak3\Ts3Exception;
+use TeamSpeak3\Adapter\AbstractAdapter;
+use TeamSpeak3\Adapter\Blacklist;
+use TeamSpeak3\Adapter\FileTransfer;
+use TeamSpeak3\Adapter\ServerQuery;
+use TeamSpeak3\Adapter\TSDNS;
+use TeamSpeak3\Adapter\Update;
+use TeamSpeak3\Helper\Uri;
+use TeamSpeak3\Helper\String;
+use TeamSpeak3\Helper\Profiler;
+use TeamSpeak3\Node\AbstractNode;
+use TeamSpeak3\Node\Channel;
+use TeamSpeak3\Node\Channelgroug;
+use TeamSpeak3\Node\Client;
+use TeamSpeak3\Node\Host;
+use TeamSpeak3\Node\Server;
+use TeamSpeak3\Node\Servergroup;
 
 use \LogicException;
 
