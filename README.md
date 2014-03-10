@@ -3,6 +3,7 @@ Introduction
 
 Clone of [TS3 PHP Framework 1.1.23](https://www.planetteamspeak.com/) providing the library as composer project.
 
+
 Usage
 =====
 
