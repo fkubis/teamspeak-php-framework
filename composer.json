@@ -16,7 +16,7 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Teamspeak3\\": "Teamspeak3/" }
+        "psr-4": { "TeamSpeak3\\": "TeamSpeak3/" }
     },
     "require": {
         "php": ">=5.3.3"
