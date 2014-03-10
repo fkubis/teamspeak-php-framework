@@ -1,0 +1,20 @@
+{
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "sonata-project/goutte",
+                "version": "dev-master",
+                "source": {
+                    "url": "https://github.com/FKubisAranox/teamspeak-php-framework",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
+        }
+    ],
+    "require": {
+    "php": ">=5.3.3",
+    "sonata-project/goutte": "dev-master"
+    }
+}
