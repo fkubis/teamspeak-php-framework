@@ -1,5 +1,5 @@
 {
-    "name": "FKubisAranox/teamspeak-php-framework",
+    "name": "fkubisaranox/teamspeak-php-framework",
     "type": "application",
     "description": "Clone of TS3 PHP Framework 1.1.23 providing the library as composer project.",
     "keywords": ["teamspeak3"],
@@ -8,7 +8,6 @@
     "authors": [
         {
             "name": "Sven Paulsen",
-            "email": ""
         },
         {
             "name": "Frank Kubis",
@@ -18,6 +17,7 @@
     "autoload": {
         "psr-0": { "Teamspeak3": "." }
     },
+    "target-dir" : "Vendor/Teamspeak3",
     "require": {
         "php": ">=5.3.3"
     }
