@@ -1,20 +1,24 @@
 {
-    "repositories": [
+    "name": "FKubisAranox/teamspeak-php-framework",
+    "type": "application",
+    "description": "Clone of TS3 PHP Framework 1.1.23 providing the library as composer project.",
+    "keywords": ["teamspeak3"],
+    "homepage": "https://github.com/FKubisAranox/teamspeak-php-framework",
+    "license": "GPL2",
+    "authors": [
         {
-            "type": "package",
-            "package": {
-                "name": "sonata-project/goutte",
-                "version": "dev-master",
-                "source": {
-                    "url": "https://github.com/FKubisAranox/teamspeak-php-framework",
-                    "type": "git",
-                    "reference": "master"
-                }
-            }
+            "name": "Sven Paulsen",
+            "email": ""
+        },
+        {
+            "name": "Frank Kubis",
+            "email": "f.kubis@aranox.de"
         }
     ],
+    "autoload": {
+        "psr-0": { "Teamspeak3": "." }
+    },
     "require": {
-    "php": ">=5.3.3",
-    "sonata-project/goutte": "dev-master"
+        "php": ">=5.3.3"
     }
 }
