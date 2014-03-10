@@ -4,7 +4,7 @@
  * @file
  * TeamSpeak 3 PHP Framework
  *
- * $Id: Abstract.php 10/11/2013 11:35:21 scp@orilla $
+ * $Id: AbstractAdapter.php 10/11/2013 11:35:21 scp@orilla $
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,15 +27,15 @@
 
 namespace Teamspeak3\Adapter;
 
-use Teamspeak3\Transport\TeamSpeak3_Transport_Abstract;
-use Teamspeak3\Helper\TeamSpeak3_Helper_Profiler;
-use Teamspeak3\Helper\Profiler\TeamSpeak3_Helper_Profiler_Timer;
+use Teamspeak3\Transport\AbstractTransport;
+use Teamspeak3\Helper\Profiler;
+use Teamspeak3\Helper\Profiler\Timer;
 
 /**
- * @class TeamSpeak3_Adapter_Abstract
+ * @class AbstractAdapter
  * @brief Provides low-level methods for concrete adapters to communicate with a TeamSpeak 3 Server.
  */
-abstract class TeamSpeak3_Adapter_Abstract
+abstract class AbstractAdapter
 {
     /**
      * Stores user-provided options.
@@ -45,17 +45,17 @@ abstract class TeamSpeak3_Adapter_Abstract
     protected $options = null;
 
     /**
-     * Stores an TeamSpeak3_Transport_Abstract object.
+     * Stores an AbstractTransport object.
      *
-     * @var TeamSpeak3_Transport_Abstract
+     * @var AbstractTransport
      */
     protected $transport = null;
 
     /**
-     * The TeamSpeak3_Adapter_Abstract constructor.
+     * The AbstractAdapter constructor.
      *
      * @param  array $options
-     * @return TeamSpeak3_Adapter_Abstract
+     * @return AbstractAdapter
      */
     public function __construct(array $options)
     {
@@ -67,17 +67,17 @@ abstract class TeamSpeak3_Adapter_Abstract
     }
 
     /**
-     * The TeamSpeak3_Adapter_Abstract destructor.
+     * The AbstractAdapter destructor.
      *
      * @return void
      */
     abstract public function __destruct();
 
     /**
-     * Connects the TeamSpeak3_Transport_Abstract object and performs initial actions on the remote
+     * Connects the AbstractTransport object and performs initial actions on the remote
      * server.
      *
-     * @throws TeamSpeak3_Adapter_Exception
+     * @throws Ts3Exception
      * @return void
      */
     abstract protected function syn();
@@ -105,17 +105,17 @@ abstract class TeamSpeak3_Adapter_Abstract
     /**
      * Returns the profiler timer used for this connection adapter.
      *
-     * @return TeamSpeak3_Helper_Profiler_Timer
+     * @return Timer
      */
     public function getProfiler()
     {
-        return TeamSpeak3_Helper_Profiler::get(spl_object_hash($this));
+        return Profiler::get(spl_object_hash($this));
     }
 
     /**
      * Returns the transport object used for this connection adapter.
      *
-     * @return TeamSpeak3_Transport_Abstract
+     * @return AbstractTransport
      */
     public function getTransport()
     {
@@ -128,20 +128,20 @@ abstract class TeamSpeak3_Adapter_Abstract
      *
      * @param  array $options
      * @param  string $transport
-     * @throws TeamSpeak3_Adapter_Exception
+     * @throws Ts3Exception
      * @return void
      */
-    protected function initTransport($options, $transport = "TeamSpeak3_Transport_TCP")
+    protected function initTransport($options, $transport = "TCP")
     {
         if (!is_array($options)) {
-            throw new TeamSpeak3_Adapter_Exception("transport parameters must provided in an array");
+            throw new Ts3Exception("transport parameters must provided in an array");
         }
 
         $this->transport = new $transport($options);
     }
 
     /**
-     * Returns the hostname or IPv4 address the underlying TeamSpeak3_Transport_Abstract object
+     * Returns the hostname or IPv4 address the underlying AbstractTransport object
      * is connected to.
      *
      * @return string
@@ -152,7 +152,7 @@ abstract class TeamSpeak3_Adapter_Abstract
     }
 
     /**
-     * Returns the port number of the server the underlying TeamSpeak3_Transport_Abstract object
+     * Returns the port number of the server the underlying AbstractTransport object
      * is connected to.
      *
      * @return string

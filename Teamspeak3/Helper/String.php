@@ -30,12 +30,15 @@ namespace Teamspeak3\Helper;
 use \ArrayAccess;
 use \Iterator;
 use \Countable;
+use Teamspeak3\TeamSpeak3;
+use Teamspeak3\Ts3Exception;
+use Teamspeak3\Helper\Signal;
 
 /**
- * @class TeamSpeak3_Helper_String
+ * @class String
  * @brief Helper class for string handling.
  */
-class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
+class String implements ArrayAccess, Iterator, Countable
 {
     /**
      * Stores the original string.
@@ -50,10 +53,10 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
     protected $position = 0;
 
     /**
-     * The TeamSpeak3_Helper_String constructor.
+     * The String constructor.
      *
      * @param  string $string
-     * @return TeamSpeak3_Helper_String
+     * @return \Teamspeak3\Helper\String
      */
     public function __construct($string)
     {
@@ -61,10 +64,10 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * Returns a TeamSpeak3_Helper_String object for thegiven string.
+     * Returns a String object for thegiven string.
      *
      * @param  string $string
-     * @return TeamSpeak3_Helper_String
+     * @return String
      */
     public static function factory($string)
     {
@@ -482,10 +485,10 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * Decodes the string with MIME base64 and returns the result as an TeamSpeak3_Helper_String
+     * Decodes the string with MIME base64 and returns the result as an String
      *
      * @param  string
-     * @return TeamSpeak3_Helper_String
+     * @return String
      */
     public static function fromBase64($base64)
     {
@@ -509,18 +512,18 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * Returns the TeamSpeak3_Helper_String based on a given hex value.
+     * Returns the String based on a given hex value.
      *
      * @param  string
-     * @throws TeamSpeak3_Helper_Exception
-     * @return TeamSpeak3_Helper_String
+     * @throws Ts3Exception
+     * @return String
      */
     public static function fromHex($hex)
     {
         $string = "";
 
         if (strlen($hex) % 2 == 1) {
-            throw new TeamSpeak3_Helper_Exception("given parameter '" . $hex . "' is not a valid hexadecimal number");
+            throw new Ts3Exception("given parameter '" . $hex . "' is not a valid hexadecimal number");
         }
 
         foreach (str_split($hex, 2) as $chunk) {
@@ -789,24 +792,24 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * Magical function that allows you to call PHP's built-in string functions on the TeamSpeak3_Helper_String object.
+     * Magical function that allows you to call PHP's built-in string functions on the String object.
      *
      * @param  string $function
      * @param  array $args
-     * @throws TeamSpeak3_Helper_Exception
-     * @return TeamSpeak3_Helper_String
+     * @throws Ts3Exception
+     * @return String
      */
     public function __call($function, $args)
     {
         if (!function_exists($function)) {
-            throw new TeamSpeak3_Helper_Exception("cannot call undefined function '" . $function . "' on this object");
+            throw new Ts3Exception("cannot call undefined function '" . $function . "' on this object");
         }
 
         if (count($args)) {
             if (($key = array_search($this, $args, true)) !== false) {
                 $args[$key] = $this->string;
             } else {
-                throw new TeamSpeak3_Helper_Exception(
+                throw new Ts3Exception(
                     "cannot call undefined function '" . $function . "' without the " . __CLASS__ . " object parameter"
                 );
             }
@@ -872,7 +875,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
      */
     public function current()
     {
-        return new TeamSpeak3_Helper_Char($this->string{$this->position});
+        return new Char($this->string{$this->position});
     }
 
     /**
@@ -896,7 +899,7 @@ class TeamSpeak3_Helper_String implements ArrayAccess, Iterator, Countable
      */
     public function offsetGet($offset)
     {
-        return ($this->offsetExists($offset)) ? new TeamSpeak3_Helper_Char($this->string{$offset}) : null;
+        return ($this->offsetExists($offset)) ? new Char($this->string{$offset}) : null;
     }
 
     /**

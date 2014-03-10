@@ -27,13 +27,13 @@
 
 namespace Teamspeak3\Helper;
 
-use Teamspeak3\Helper\TeamSpeak3_Helper_Exception;
+use Teamspeak3\Helper\Ts3Exception;
 
 /**
- * @class TeamSpeak3_Helper_Uri
+ * @class Uri
  * @brief Helper class for URI handling.
  */
-class TeamSpeak3_Helper_Uri
+class Uri
 {
     /**
      * Stores the URI scheme.
@@ -99,11 +99,11 @@ class TeamSpeak3_Helper_Uri
     protected $regex = array();
 
     /**
-     * The TeamSpeak3_Helper_Uri constructor.
+     * The Uri constructor.
      *
      * @param  string $uri
-     * @throws TeamSpeak3_Helper_Exception
-     * @return TeamSpeak3_Helper_Uri
+     * @throws Ts3Exception
+     * @return Uri
      */
     public function __construct($uri)
     {
@@ -113,7 +113,7 @@ class TeamSpeak3_Helper_Uri
         $uriString = isset($uri[1]) ? $uri[1] : "";
 
         if (!ctype_alnum($this->scheme)) {
-            throw new TeamSpeak3_Helper_Exception("invalid URI scheme '" . $this->scheme . "' supplied");
+            throw new Ts3Exception("invalid URI scheme '" . $this->scheme . "' supplied");
         }
 
         /* grammar rules for validation */
@@ -131,14 +131,14 @@ class TeamSpeak3_Helper_Uri
         }
 
         if (!$this->isValid()) {
-            throw new TeamSpeak3_Helper_Exception("invalid URI supplied");
+            throw new Ts3Exception("invalid URI supplied");
         }
     }
 
     /**
      * Parses the scheme-specific portion of the URI and place its parts into instance variables.
      *
-     * @throws TeamSpeak3_Helper_Exception
+     * @throws Ts3Exception
      * @return void
      */
     protected function parseUri($uriString = '')
@@ -146,7 +146,7 @@ class TeamSpeak3_Helper_Uri
         $status = @preg_match("~^((//)([^/?#]*))([^?#]*)(\?([^#]*))?(#(.*))?$~", $uriString, $matches);
 
         if ($status === false) {
-            throw new TeamSpeak3_Helper_Exception("URI scheme-specific decomposition failed");
+            throw new Ts3Exception("URI scheme-specific decomposition failed");
         }
 
         if (!$status) {
@@ -164,7 +164,7 @@ class TeamSpeak3_Helper_Uri
         );
 
         if ($status === false) {
-            throw new TeamSpeak3_Helper_Exception("URI scheme-specific authority decomposition failed");
+            throw new Ts3Exception("URI scheme-specific authority decomposition failed");
         }
 
         if (!$status) {
@@ -198,7 +198,7 @@ class TeamSpeak3_Helper_Uri
     {
         try {
             $uri = new self(strval($uri));
-        } catch (Exception $e) {
+        } catch (Ts3Exception $e) {
             return false;
         }
 
@@ -223,14 +223,14 @@ class TeamSpeak3_Helper_Uri
      */
     public function getScheme($default = null)
     {
-        return ($this->hasScheme()) ? new TeamSpeak3_Helper_String($this->scheme) : $default;
+        return ($this->hasScheme()) ? new String($this->scheme) : $default;
     }
 
     /**
      * Returns TRUE if the username is valid.
      *
      * @param  string $username
-     * @throws TeamSpeak3_Helper_Exception
+     * @throws Ts3Exception
      * @return boolean
      */
     public function checkUser($username = null)
@@ -247,7 +247,7 @@ class TeamSpeak3_Helper_Uri
         $status = @preg_match($pattern, $username);
 
         if ($status === false) {
-            throw new TeamSpeak3_Helper_Exception("URI username validation failed");
+            throw new Ts3Exception("URI username validation failed");
         }
 
         return ($status == 1);
@@ -271,14 +271,14 @@ class TeamSpeak3_Helper_Uri
      */
     public function getUser($default = null)
     {
-        return ($this->hasUser()) ? new TeamSpeak3_Helper_String($this->user) : $default;
+        return ($this->hasUser()) ? new String($this->user) : $default;
     }
 
     /**
      * Returns TRUE if the password is valid.
      *
      * @param  string $password
-     * @throws TeamSpeak3_Helper_Exception
+     * @throws Ts3Exception
      * @return boolean
      */
     public function checkPass($password = null)
@@ -295,7 +295,7 @@ class TeamSpeak3_Helper_Uri
         $status = @preg_match($pattern, $password);
 
         if ($status === false) {
-            throw new TeamSpeak3_Helper_Exception("URI password validation failed");
+            throw new Ts3Exception("URI password validation failed");
         }
 
         return ($status == 1);
@@ -319,7 +319,7 @@ class TeamSpeak3_Helper_Uri
      */
     public function getPass($default = null)
     {
-        return ($this->hasPass()) ? new TeamSpeak3_Helper_String($this->pass) : $default;
+        return ($this->hasPass()) ? new String($this->pass) : $default;
     }
 
     /**
@@ -355,7 +355,7 @@ class TeamSpeak3_Helper_Uri
      */
     public function getHost($default = null)
     {
-        return ($this->hasHost()) ? new TeamSpeak3_Helper_String($this->host) : $default;
+        return ($this->hasHost()) ? new String($this->host) : $default;
     }
 
     /**
@@ -398,7 +398,7 @@ class TeamSpeak3_Helper_Uri
      * Returns TRUE if the path is valid.
      *
      * @param  string $path
-     * @throws TeamSpeak3_Helper_Exception
+     * @throws Ts3Exception
      * @return boolean
      */
     public function checkPath($path = null)
@@ -415,7 +415,7 @@ class TeamSpeak3_Helper_Uri
         $status = @preg_match($pattern, $path);
 
         if ($status === false) {
-            throw new TeamSpeak3_Helper_Exception("URI path validation failed");
+            throw new Ts3Exception("URI path validation failed");
         }
 
         return ($status == 1);
@@ -439,14 +439,14 @@ class TeamSpeak3_Helper_Uri
      */
     public function getPath($default = null)
     {
-        return ($this->hasPath()) ? new TeamSpeak3_Helper_String($this->path) : $default;
+        return ($this->hasPath()) ? new String($this->path) : $default;
     }
 
     /**
      * Returns TRUE if the query string is valid.
      *
      * @param  string $query
-     * @throws TeamSpeak3_Helper_Exception
+     * @throws Ts3Exception
      * @return boolean
      */
     public function checkQuery($query = null)
@@ -463,7 +463,7 @@ class TeamSpeak3_Helper_Uri
         $status = @preg_match($pattern, $query);
 
         if ($status === false) {
-            throw new TeamSpeak3_Helper_Exception("URI query string validation failed");
+            throw new Ts3Exception("URI query string validation failed");
         }
 
         return ($status == 1);
@@ -533,7 +533,7 @@ class TeamSpeak3_Helper_Uri
             if (ctype_digit($val)) {
                 return intval($val);
             } elseif (is_string($val)) {
-                return new TeamSpeak3_Helper_String($val);
+                return new String($val);
             } else {
                 return $val;
             }
@@ -546,7 +546,7 @@ class TeamSpeak3_Helper_Uri
      * Returns TRUE if the fragment string is valid.
      *
      * @param  string $fragment
-     * @throws TeamSpeak3_Helper_Exception
+     * @throws Ts3Exception
      * @return boolean
      */
     public function checkFragment($fragment = null)
@@ -563,7 +563,7 @@ class TeamSpeak3_Helper_Uri
         $status = @preg_match($pattern, $fragment);
 
         if ($status === false) {
-            throw new TeamSpeak3_Helper_Exception("URI fragment validation failed");
+            throw new Ts3Exception("URI fragment validation failed");
         }
 
         return ($status == 1);
@@ -587,7 +587,7 @@ class TeamSpeak3_Helper_Uri
      */
     public function getFragment($default = null)
     {
-        return ($this->hasFragment()) ? new TeamSpeak3_Helper_String($this->fragment) : $default;
+        return ($this->hasFragment()) ? new String($this->fragment) : $default;
     }
 
     /**
@@ -662,7 +662,7 @@ class TeamSpeak3_Helper_Uri
     {
         $sheme = (self::getHostParam("HTTPS") == "on") ? "https" : "http";
 
-        $serverName = new TeamSpeak3_Helper_String(self::getHostParam("HTTP_HOST"));
+        $serverName = new String(self::getHostParam("HTTP_HOST"));
         $serverPort = self::getHostParam("SERVER_PORT");
         $serverPort = ($serverPort != 80 && $serverPort != 443) ? ":" . $serverPort : "";
 
@@ -670,7 +670,7 @@ class TeamSpeak3_Helper_Uri
             $serverName = $serverName->replace($serverPort, "");
         }
 
-        return new TeamSpeak3_Helper_String($sheme . "://" . $serverName . $serverPort);
+        return new String($sheme . "://" . $serverName . $serverPort);
     }
 
     /**
@@ -680,7 +680,7 @@ class TeamSpeak3_Helper_Uri
      */
     public static function getBaseUri()
     {
-        $scriptPath = new TeamSpeak3_Helper_String(dirname(self::getHostParam("SCRIPT_NAME")));
+        $scriptPath = new String(dirname(self::getHostParam("SCRIPT_NAME")));
 
         return self::getHostUri()->append(($scriptPath == DIRECTORY_SEPARATOR ? "" : $scriptPath) . "/");
     }

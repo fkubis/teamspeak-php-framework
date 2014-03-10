@@ -4,7 +4,7 @@
  * @file
  * TeamSpeak 3 PHP Framework
  *
- * $Id: Abstract.php 10/11/2013 11:35:22 scp@orilla $
+ * $Id: AbstractAdapter.php 10/11/2013 11:35:22 scp@orilla $
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,10 +28,10 @@
 namespace Teamspeak3\Transport;
 
 /**
- * @class TeamSpeak3_Transport_Abstract
+ * @class AbstractTransport
  * @brief Abstract class for connecting to a TeamSpeak 3 Server through different ways of transport.
  */
-abstract class TeamSpeak3_Transport_Abstract
+abstract class AbstractTransport
 {
     /**
      * Stores user-provided configuration settings.
@@ -48,29 +48,29 @@ abstract class TeamSpeak3_Transport_Abstract
     protected $stream = null;
 
     /**
-     * Stores the TeamSpeak3_Adapter_Abstract object using this transport.
+     * Stores the AbstractAdapter object using this transport.
      *
-     * @var TeamSpeak3_Adapter_Abstract
+     * @var AbstractAdapter
      */
     protected $adapter = null;
 
     /**
-     * The TeamSpeak3_Transport_Abstract constructor.
+     * The AbstractTransport constructor.
      *
      * @param  array $config
-     * @throws TeamSpeak3_Transport_Exception
-     * @return TeamSpeak3_Transport_Abstract
+     * @throws Ts3Exception
+     * @return AbstractTransport
      */
     public function __construct(array $config)
     {
         if (!array_key_exists("host", $config)) {
-            throw new TeamSpeak3_Transport_Exception(
+            throw new Ts3Exception(
                 "config must have a key for 'host' which specifies the server host name"
             );
         }
 
         if (!array_key_exists("port", $config)) {
-            throw new TeamSpeak3_Transport_Exception(
+            throw new Ts3Exception(
                 "config must have a key for 'port' which specifies the server port number"
             );
         }
@@ -107,7 +107,7 @@ abstract class TeamSpeak3_Transport_Abstract
     }
 
     /**
-     * The TeamSpeak3_Transport_Abstract destructor.
+     * The AbstractTransport destructor.
      *
      * @return void
      */
@@ -123,7 +123,7 @@ abstract class TeamSpeak3_Transport_Abstract
     /**
      * Connects to a remote server.
      *
-     * @throws TeamSpeak3_Transport_Exception
+     * @throws Ts3Exception
      * @return void
      */
     abstract public function connect();
@@ -139,7 +139,7 @@ abstract class TeamSpeak3_Transport_Abstract
      * Reads data from the stream.
      *
      * @param  integer $length
-     * @throws TeamSpeak3_Transport_Exception
+     * @throws Ts3Exception
      * @return TeamSpeak3_Helper_String
      */
     abstract public function read($length = 4096);
@@ -179,9 +179,9 @@ abstract class TeamSpeak3_Transport_Abstract
     }
 
     /**
-     * Sets the TeamSpeak3_Adapter_Abstract object using this transport.
+     * Sets the AbstractAdapter object using this transport.
      *
-     * @param  TeamSpeak3_Adapter_Abstract $adapter
+     * @param  AbstractAdapter $adapter
      * @return void
      */
     public function setAdapter(TeamSpeak3_Adapter_Abstract $adapter)
@@ -190,9 +190,9 @@ abstract class TeamSpeak3_Transport_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Adapter_Abstract object using this transport.
+     * Returns the AbstractAdapter object using this transport.
      *
-     * @return TeamSpeak3_Adapter_Abstract
+     * @return AbstractAdapter
      */
     public function getAdapter()
     {
@@ -218,13 +218,13 @@ abstract class TeamSpeak3_Transport_Abstract
     /**
      * Returns header/meta data from stream pointer.
      *
-     * @throws TeamSpeak3_Transport_Exception
+     * @throws Ts3Exception
      * @return array
      */
     public function getMetaData()
     {
         if ($this->stream === null) {
-            throw new TeamSpeak3_Transport_Exception("unable to retrieve header/meta data from stream pointer");
+            throw new Ts3Exception("unable to retrieve header/meta data from stream pointer");
         }
 
         return stream_get_meta_data($this->stream);

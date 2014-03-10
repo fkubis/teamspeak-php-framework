@@ -27,11 +27,13 @@
 
 namespace Teamspeak3\Helper;
 
+use Teamspeak3\Helper\Profiler\Timer;
+
 /**
- * @class TeamSpeak3_Helper_Profiler
+ * @class Profiler
  * @brief Helper class for profiler handling.
  */
-class TeamSpeak3_Helper_Profiler
+class Profiler
 {
     /**
      * Stores various timers for code profiling.
@@ -48,7 +50,7 @@ class TeamSpeak3_Helper_Profiler
      */
     public static function init($name = "default")
     {
-        self::$timers[$name] = new TeamSpeak3_Helper_Profiler_Timer($name);
+        self::$timers[$name] = new Timer($name);
     }
 
     /**
@@ -62,7 +64,7 @@ class TeamSpeak3_Helper_Profiler
         if (array_key_exists($name, self::$timers)) {
             self::$timers[$name]->start();
         } else {
-            self::$timers[$name] = new TeamSpeak3_Helper_Profiler_Timer($name);
+            self::$timers[$name] = new Timer($name);
         }
     }
 

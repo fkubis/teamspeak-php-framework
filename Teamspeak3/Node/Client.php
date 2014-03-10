@@ -28,21 +28,21 @@
 namespace Teamspeak3\Node;
 
 /**
- * @class TeamSpeak3_Node_Client
+ * @class Client
  * @brief Class describing a TeamSpeak 3 client and all it's parameters.
  */
-class TeamSpeak3_Node_Client extends TeamSpeak3_Node_Abstract
+class Client extends AbstractNode
 {
     /**
-     * The TeamSpeak3_Node_Client constructor.
+     * The Client constructor.
      *
-     * @param  TeamSpeak3_Node_Server $server
+     * @param  Server $server
      * @param  array $info
      * @param  string $index
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Client
+     * @return Client
      */
-    public function __construct(TeamSpeak3_Node_Server $server, array $info, $index = "clid")
+    public function __construct(Server $server, array $info, $index = "clid")
     {
         $this->parent = $server;
         $this->nodeInfo = $info;

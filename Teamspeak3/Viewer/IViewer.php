@@ -4,7 +4,7 @@
  * @file
  * TeamSpeak 3 PHP Framework
  *
- * $Id: Exception.php 10/11/2013 11:35:21 scp@orilla $
+ * $Id: Interface.php 10/11/2013 11:35:22 scp@orilla $
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,14 +25,20 @@
  * @copyright Copyright (c) 2010 by Planet TeamSpeak. All rights reserved.
  */
 
-namespace Teamspeak3\Adapter\Blacklist;
-
-use Teamspeak3\Adapter\TeamSpeak3_Adapter_Exception;
+namespace Teamspeak3\Viewer;
 
 /**
- * @class TeamSpeak3_Adapter_Blacklist_Exception
- * @brief Enhanced exception class for TeamSpeak3_Adapter_Blacklist objects.
+ * @class IViewer
+ * @brief Interface class describing a TeamSpeak 3 viewer.
  */
-class TeamSpeak3_Adapter_Blacklist_Exception extends TeamSpeak3_Adapter_Exception
+interface IViewer
 {
+    /**
+     * Returns the code needed to display a node in a TeamSpeak 3 viewer.
+     *
+     * @param  TeamSpeak3_Node_Abstract $node
+     * @param  array $siblings
+     * @return string
+     */
+    public function fetchObject(TeamSpeak3_Node_Abstract $node, array $siblings = array());
 }

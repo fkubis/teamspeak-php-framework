@@ -28,10 +28,10 @@
 namespace Teamspeak3\Viewer;
 
 /**
- * @class TeamSpeak3_Viewer_Html
+ * @class Html
  * @brief Renders nodes used in HTML-based TeamSpeak 3 viewers.
  */
-class TeamSpeak3_Viewer_Html implements TeamSpeak3_Viewer_Interface
+class Html implements IViewer
 {
     /**
      * A pre-defined pattern used to display a node in a TeamSpeak 3 viewer.
@@ -41,14 +41,14 @@ class TeamSpeak3_Viewer_Html implements TeamSpeak3_Viewer_Interface
     protected $pattern = "<table id='%0' class='%1' summary='%2'><tr class='%3'><td class='%4'>%5</td><td class='%6' title='%7'>%8 %9</td><td class='%10'>%11%12</td></tr></table>\n";
 
     /**
-     * The TeamSpeak3_Node_Abstract object which is currently processed.
+     * The AbstractNode object which is currently processed.
      *
-     * @var TeamSpeak3_Node_Abstract
+     * @var AbstractNode
      */
     protected $currObj = null;
 
     /**
-     * An array filled with siblingsfor the  TeamSpeak3_Node_Abstract object which is currently
+     * An array filled with siblingsfor the  AbstractNode object which is currently
      * processed.
      *
      * @var array
@@ -56,7 +56,7 @@ class TeamSpeak3_Viewer_Html implements TeamSpeak3_Viewer_Interface
     protected $currSib = null;
 
     /**
-     * An internal counter indicating the number of fetched TeamSpeak3_Node_Abstract objects.
+     * An internal counter indicating the number of fetched AbstractNode objects.
      *
      * @var integer
      */
@@ -98,7 +98,7 @@ class TeamSpeak3_Viewer_Html implements TeamSpeak3_Viewer_Interface
     protected $remoteIcons = array();
 
     /**
-     * The TeamSpeak3_Viewer_Html constructor.
+     * The Html constructor.
      *
      * @param  string $iconpath
      * @param  string $flagpath

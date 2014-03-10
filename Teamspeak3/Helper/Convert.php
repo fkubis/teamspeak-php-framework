@@ -28,14 +28,14 @@
 namespace Teamspeak3\Helper;
 
 use Teamspeak3\TeamSpeak3;
-use Teamspeak3\Helper\TeamSpeak3_Helper_String;
+use Teamspeak3\Helper\String;
 
 
 /**
- * @class TeamSpeak3_Helper_Convert
+ * @class Convert
  * @brief Helper class for data conversion.
  */
-class TeamSpeak3_Helper_Convert
+class Convert
 {
     /**
      * Converts bytes to a human readable value.
@@ -323,7 +323,7 @@ class TeamSpeak3_Helper_Convert
             $array["level"] = TeamSpeak3::LOGLEVEL_ERROR;
             $array["channel"] = "ParamParser";
             $array["server_id"] = "";
-            $array["msg"] = TeamSpeak3_Helper_String::factory("convert error (" . trim($entry) . ")");
+            $array["msg"] = String::factory("convert error (" . trim($entry) . ")");
             $array["msg_plain"] = $entry;
             $array["malformed"] = true;
         } else {
@@ -331,7 +331,7 @@ class TeamSpeak3_Helper_Convert
             $array["level"] = self::logLevel(trim($parts[1]));
             $array["channel"] = trim($parts[2]);
             $array["server_id"] = trim($parts[3]);
-            $array["msg"] = TeamSpeak3_Helper_String::factory(trim($parts[4]));
+            $array["msg"] = String::factory(trim($parts[4]));
             $array["msg_plain"] = $entry;
             $array["malformed"] = false;
         }
@@ -359,8 +359,8 @@ class TeamSpeak3_Helper_Convert
      */
     public static function version($version, $format = "Y-m-d h:i:s")
     {
-        if (!$version instanceof TeamSpeak3_Helper_String) {
-            $version = new TeamSpeak3_Helper_String($version);
+        if (!$version instanceof String) {
+            $version = new String($version);
         }
 
         $buildno = $version->section("[", 1)->filterDigits()->toInt();
@@ -376,8 +376,8 @@ class TeamSpeak3_Helper_Convert
      */
     public static function versionShort($version)
     {
-        if (!$version instanceof TeamSpeak3_Helper_String) {
-            $version = new TeamSpeak3_Helper_String($version);
+        if (!$version instanceof String) {
+            $version = new String($version);
         }
 
         return $version->section(" ", 0);

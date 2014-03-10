@@ -28,10 +28,10 @@
 namespace Teamspeak3\Helper;
 
 /**
- * @class TeamSpeak3_Helper_Crypt
+ * @class Crypt
  * @brief Helper class for data encryption.
  */
-class TeamSpeak3_Helper_Crypt
+class Crypt
 {
     /**
      * Stores the secret passphrase to encrypt or decrypt a given string.
@@ -55,10 +55,10 @@ class TeamSpeak3_Helper_Crypt
     protected $s = array();
 
     /**
-     * The TeamSpeak3_Helper_Crypt constructor.
+     * The Crypt constructor.
      *
      * @param  string $secret
-     * @return TeamSpeak3_Helper_Crypt
+     * @return Crypt
      */
     public function __construct($secret)
     {
@@ -159,7 +159,7 @@ class TeamSpeak3_Helper_Crypt
         $length = strlen($passphrase);
 
         if (strlen($passphrase) < 1 || strlen($passphrase) > 56) {
-            throw new TeamSpeak3_Helper_Exception(
+            throw new Ts3Exception(
                 "secret passphrase must contain at least one but less than 56 characters"
             );
         }

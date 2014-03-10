@@ -27,18 +27,18 @@
 
 namespace Teamspeak3\Adapter;
 
-use Teamspeak3\Adapter\Update\TeamSpeak3_Adapter_Update_Exception;
-use Teamspeak3\Helper\TeamSpeak3_Helper_Profiler;
-use Teamspeak3\Helper\TeamSpeak3_Helper_Signal;
-use Teamspeak3\Helper\TeamSpeak3_Helper_String;
-use Teamspeak3\Transport\TeamSpeak3_Transport_Abstract;
+use Teamspeak3\Adapter\Update\Ts3Exception;
+use Teamspeak3\Helper\Profiler;
+use Teamspeak3\Helper\Signal;
+use Teamspeak3\Helper\String;
+use Teamspeak3\Transport\AbstractTransport;
 
 
 /**
- * @class TeamSpeak3_Adapter_Update
+ * @class Update
  * @brief Provides methods to query the latest TeamSpeak 3 build numbers from the master server.
  */
-class TeamSpeak3_Adapter_Update extends TeamSpeak3_Adapter_Abstract
+class Update extends AbstractAdapter
 {
     /**
      * The IPv4 address or FQDN of the TeamSpeak Systems update server.
@@ -69,10 +69,10 @@ class TeamSpeak3_Adapter_Update extends TeamSpeak3_Adapter_Abstract
     protected $version_strings = null;
 
     /**
-     * Connects the TeamSpeak3_Transport_Abstract object and performs initial actions on the remote
+     * Connects the AbstractTransport object and performs initial actions on the remote
      * server.
      *
-     * @throws TeamSpeak3_Adapter_Update_Exception
+     * @throws Ts3Exception
      * @return void
      */
     public function syn()
@@ -84,12 +84,12 @@ class TeamSpeak3_Adapter_Update extends TeamSpeak3_Adapter_Abstract
             $this->options["port"] = $this->default_port;
         }
 
-        $this->initTransport($this->options, "TeamSpeak3_Transport_UDP");
+        $this->initTransport($this->options, "UDP");
         $this->transport->setAdapter($this);
 
-        TeamSpeak3_Helper_Profiler::init(spl_object_hash($this));
+        Profiler::init(spl_object_hash($this));
 
-        $this->getTransport()->send(TeamSpeak3_Helper_String::fromHex(33));
+        $this->getTransport()->send(String::fromHex(33));
 
         if (!preg_match_all(
                 "/,?(\d+)#([0-9a-zA-Z\._-]+),?/",
@@ -97,23 +97,23 @@ class TeamSpeak3_Adapter_Update extends TeamSpeak3_Adapter_Abstract
                 $matches
             ) || !isset($matches[1]) || !isset($matches[2])
         ) {
-            throw new TeamSpeak3_Adapter_Update_Exception("invalid reply from the server");
+            throw new Ts3Exception("invalid reply from the server");
         }
 
         $this->build_datetimes = $matches[1];
         $this->version_strings = $matches[2];
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("updateConnected", $this);
+        Signal::getInstance()->emit("updateConnected", $this);
     }
 
     /**
-     * The TeamSpeak3_Adapter_Update destructor.
+     * The Update destructor.
      *
      * @return void
      */
     public function __destruct()
     {
-        if ($this->getTransport() instanceof TeamSpeak3_Transport_Abstract && $this->getTransport()->isConnected()) {
+        if ($this->getTransport() instanceof AbstractTransport && $this->getTransport()->isConnected()) {
             $this->getTransport()->disconnect();
         }
     }
@@ -129,7 +129,7 @@ class TeamSpeak3_Adapter_Update extends TeamSpeak3_Adapter_Abstract
      * - server
      *
      * @param  string $channel
-     * @throws TeamSpeak3_Adapter_Update_Exception
+     * @throws Ts3Exception
      * @return integer
      */
     public function getRev($channel = "stable")
@@ -148,7 +148,7 @@ class TeamSpeak3_Adapter_Update extends TeamSpeak3_Adapter_Abstract
                 return isset($this->build_datetimes[3]) ? $this->build_datetimes[3] : null;
 
             default:
-                throw new TeamSpeak3_Adapter_Update_Exception("invalid update channel identifier (" . $channel . ")");
+                throw new Ts3Exception("invalid update channel identifier (" . $channel . ")");
         }
     }
 
@@ -162,7 +162,7 @@ class TeamSpeak3_Adapter_Update extends TeamSpeak3_Adapter_Abstract
      * - server
      *
      * @param  string $channel
-     * @throws TeamSpeak3_Adapter_Update_Exception
+     * @throws Ts3Exception
      * @return integer
      */
     public function getVersion($channel = "stable")
@@ -181,7 +181,7 @@ class TeamSpeak3_Adapter_Update extends TeamSpeak3_Adapter_Abstract
                 return isset($this->version_strings[3]) ? $this->version_strings[3] : null;
 
             default:
-                throw new TeamSpeak3_Adapter_Update_Exception("invalid update channel identifier (" . $channel . ")");
+                throw new Ts3Exception("invalid update channel identifier (" . $channel . ")");
         }
     }
 

@@ -28,10 +28,10 @@
 namespace Teamspeak3\Viewer;
 
 /**
- * @class TeamSpeak3_Viewer_Text
+ * @class Text
  * @brief Renders nodes used in ASCII-based TeamSpeak 3 viewers.
  */
-class TeamSpeak3_Viewer_Text implements TeamSpeak3_Viewer_Interface
+class Text implements IViewer
 {
     /**
      * A pre-defined pattern used to display a node in a TeamSpeak 3 viewer.

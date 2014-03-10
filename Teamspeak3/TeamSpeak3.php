@@ -27,24 +27,23 @@
 
 namespace Teamspeak3;
 
-use Teamspeak3\Adapter\TeamSpeak3_Adapter_Abstract;
-use Teamspeak3\Adapter\TeamSpeak3_Adapter_Blacklist;
-use Teamspeak3\Adapter\TeamSpeak3_Adapter_Exception;
-use Teamspeak3\Adapter\TeamSpeak3_Adapter_FileTransfer;
-use Teamspeak3\Adapter\TeamSpeak3_Adapter_ServerQuery;
-use Teamspeak3\Adapter\TeamSpeak3_Adapter_TSDNS;
-use Teamspeak3\Adapter\Teamspeak3_Adapter_Update;
-use Teamspeak3\Helper\TeamSpeak3_Helper_Uri;
-use Teamspeak3\Helper\TeamSpeak3_Helper_String;
-use Teamspeak3\Helper\TeamSpeak3_Helper_Profiler;
-use Teamspeak3\Node\TeamSpeak3_Node_Abstract;
-use Teamspeak3\Node\TeamSpeak3_Node_Channel;
-use Teamspeak3\Node\TeamSpeak3_Node_Channelgroup;
-use Teamspeak3\Node\TeamSpeak3_Node_Client;
-use Teamspeak3\Node\TeamSpeak3_Node_Exception;
-use Teamspeak3\Node\TeamSpeak3_Node_Host;
-use Teamspeak3\Node\TeamSpeak3_Node_Server;
-use Teamspeak3\Node\TeamSpeak3_Node_Servergroup;
+use Teamspeak3\Ts3Exception;
+use Teamspeak3\Adapter\AbstractAdapter;
+use Teamspeak3\Adapter\Blacklist;
+use Teamspeak3\Adapter\FileTransfer;
+use Teamspeak3\Adapter\ServerQuery;
+use Teamspeak3\Adapter\TSDNS;
+use Teamspeak3\Adapter\Update;
+use Teamspeak3\Helper\Uri;
+use Teamspeak3\Helper\String;
+use Teamspeak3\Helper\Profiler;
+use Teamspeak3\Node\AbstractNode;
+use Teamspeak3\Node\Channel;
+use Teamspeak3\Node\Channelgroug;
+use Teamspeak3\Node\Client;
+use Teamspeak3\Node\Host;
+use Teamspeak3\Node\Server;
+use Teamspeak3\Node\Servergroup;
 
 use \LogicException;
 
@@ -296,7 +295,7 @@ class TeamSpeak3
     );
 
     /**
-     * Factory for TeamSpeak3_Adapter_Abstract classes. $uri must be formatted as
+     * Factory for AbstractAdapter classes. $uri must be formatted as
      * "<adapter>://<user>:<pass>@<host>:<port>/<options>#<flags>". All parameters
      * except adapter, host and port are optional.
      *
@@ -326,14 +325,14 @@ class TeamSpeak3
      *   - update
      *
      * @param  string $uri
-     * @return TeamSpeak3_Adapter_Abstract
-     * @return TeamSpeak3_Node_Abstract
+     * @return AbstractAdapter
+     * @return AbstractNode
      */
     public static function factory($uri)
     {
         self::init();
 
-        $uri = new TeamSpeak3_Helper_Uri($uri);
+        $uri = new Uri($uri);
 
         $adapter = self::getAdapterName($uri->getScheme());
         $options = array(
@@ -347,8 +346,9 @@ class TeamSpeak3
         // self::loadClass($adapter);
 
         $object = new $adapter($options);
+        var_dump($object);
 
-        if ($object instanceof TeamSpeak3_Adapter_ServerQuery) {
+        if ($object instanceof ServerQuery) {
             $node = $object->getHost();
 
             if ($uri->hasUser() && $uri->hasPass()) {
@@ -395,7 +395,7 @@ class TeamSpeak3
             }
 
             /* direct access to node objects */
-            if ($node instanceof TeamSpeak3_Node_Server) {
+            if ($node instanceof Server) {
                 /* access channel node object */
                 if ($uri->hasQueryVar("channel_id")) {
                     $node = $node->channelGetById($uri->getQueryVar("channel_id"));
@@ -461,10 +461,10 @@ class TeamSpeak3
      */
     protected static function getFilePath($name)
     {
-        $path = str_replace("_", DIRECTORY_SEPARATOR, $name);
-        $path = str_replace(__CLASS__, dirname(__FILE__), $path);
+//        $path = str_replace("_", DIRECTORY_SEPARATOR, $name);
+//        $path = str_replace(__CLASS__, dirname(__FILE__), $path);
 
-        return $path;
+        return __DIR__."/".$name;
     }
 
     /**
@@ -472,23 +472,23 @@ class TeamSpeak3
      *
      * @param  string $name
      * @param  string $namespace
-     * @throws TeamSpeak3_Adapter_Exception
+     * @throws Ts3Exception
      * @return string
      */
-    protected static function getAdapterName($name, $namespace = "TeamSpeak3_Adapter_")
+    protected static function getAdapterName($name, $namespace = "Adapter/")
     {
         $path = self::getFilePath($namespace);
         $scan = scandir($path);
 
         foreach ($scan as $node) {
-            $file = TeamSpeak3_Helper_String::factory($node)->toLower();
+            $file = String::factory($node)->toLower();
 
             if ($file->startsWith($name) && $file->endsWith(".php")) {
-                return $namespace . str_replace(".php", "", $node);
+                return str_replace(".php", "", $node);
             }
         }
 
-        throw new TeamSpeak3_Adapter_Exception("adapter '" . $name . "' does not exist");
+        throw new Ts3Exception("adapter '" . $name . "' does not exist");
     }
 
 //    /**
@@ -507,7 +507,7 @@ class TeamSpeak3
 //            self::loadClass($class);
 //
 //            return true;
-//        } catch (Exception $e) {
+//        } catch (Ts3Exception $e) {
 //            return false;
 //        }
 //    }
@@ -532,11 +532,11 @@ class TeamSpeak3
             throw new LogicException("autoload functions are not available in this PHP installation");
         }
 
-//        if (!class_exists("TeamSpeak3_Helper_Profiler")) {
+//        if (!class_exists("Profiler")) {
 //            spl_autoload_register(array(__CLASS__, "autoload"));
 //        }
 
-        TeamSpeak3_Helper_Profiler::start();
+        Profiler::start();
     }
 
     /**
@@ -842,7 +842,7 @@ class TeamSpeak3
  *   $ts3_VirtualServer = TeamSpeak3::factory("serverquery://username:password@127.0.0.1:10011/?server_port=9987");
  *
  *   // build and display HTML treeview using custom image paths (remote icons will be embedded using data URI sheme)
- *   echo $ts3_VirtualServer->getViewer(new TeamSpeak3_Viewer_Html("images/viewericons/", "images/countryflags/", "data:image"));
+ *   echo $ts3_VirtualServer->getViewer(new Html("images/viewericons/", "images/countryflags/", "data:image"));
  * @endcode
  *
  * \subsection example12 12. Update all outdated Audio Codecs to their Opus equivalent
@@ -882,7 +882,7 @@ class TeamSpeak3
  *   $avatar = $ts3_Client->avatarDownload();
  *
  *   // send header and display image
- *   header("Content-Type: " . TeamSpeak3_Helper_Convert::imageMimeType($avatar));
+ *   header("Content-Type: " . Convert::imageMimeType($avatar));
  *   echo $avatar;
  * @endcode
  *
@@ -898,13 +898,13 @@ class TeamSpeak3
  *   $ts3_VirtualServer->notifyRegister("textprivate");
  *
  *   // register a callback for notifyTextmessage events
- *   TeamSpeak3_Helper_Signal::getInstance()->subscribe("notifyTextmessage", "onTextmessage");
+ *   Signal::getInstance()->subscribe("notifyTextmessage", "onTextmessage");
  *
  *   // wait for events
  *   while(1) $ts3_VirtualServer->getAdapter()->wait();
  *
  *   // define a callback function
- *   function onTextmessage(TeamSpeak3_Adapter_ServerQuery_Event $event, TeamSpeak3_Node_Host $host)
+ *   function onTextmessage(Event $event, Host $host)
  *   {
  *     echo "Client " . $event["invokername"] . " sent textmessage: " . $event["msg"];
  *   }
@@ -916,7 +916,7 @@ class TeamSpeak3
  *   require_once("libraries/TeamSpeak3/TeamSpeak3.php");
  *
  *   // register custom error message (supported placeholders are: %file, %line, %code and %mesg)
- *   Exception::registerCustomMessage(0x300, "The specified channel does not exist; server said: %mesg");
+ *   Ts3Exception::registerCustomMessage(0x300, "The specified channel does not exist; server said: %mesg");
  *
  *   try
  *   {
@@ -926,7 +926,7 @@ class TeamSpeak3
  *     // spawn an object for the channel using a specified name
  *     $ts3_Channel = $ts3_VirtualServer->channelGetByName("I do not exist");
  *   }
- *   catch(Exception $e)
+ *   catch(Ts3Exception $e)
  *   {
  *     // print the error message returned by the server
  *     echo "Error " . $e->getCode() . ": " . $e->getMessage();

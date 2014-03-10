@@ -28,27 +28,27 @@
 namespace Teamspeak3\Node;
 
 /**
- * @class TeamSpeak3_Node_Servergroup
+ * @class Servergroup
  * @brief Class describing a TeamSpeak 3 server group and all it's parameters.
  */
-class TeamSpeak3_Node_Servergroup extends TeamSpeak3_Node_Abstract
+class Servergroup extends AbstractNode
 {
     /**
-     * The TeamSpeak3_Node_Servergroup constructor.
+     * The Servergroup constructor.
      *
-     * @param  TeamSpeak3_Node_Server $server
+     * @param  Server $server
      * @param  array $info
      * @param  string $index
-     * @throws TeamSpeak3_Node_Exception
-     * @return TeamSpeak3_Node_Servergroup
+     * @throws Ts3Exception
+     * @return Servergroup
      */
-    public function __construct(TeamSpeak3_Node_Server $server, array $info, $index = "sgid")
+    public function __construct(Server $server, array $info, $index = "sgid")
     {
         $this->parent = $server;
         $this->nodeInfo = $info;
 
         if (!array_key_exists($index, $this->nodeInfo)) {
-            throw new TeamSpeak3_Node_Exception("invalid groupID", 0xA00);
+            throw new Ts3Exception("invalid groupID", 0xA00);
         }
 
         $this->nodeId = $this->nodeInfo[$index];

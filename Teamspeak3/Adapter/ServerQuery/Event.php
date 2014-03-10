@@ -27,25 +27,25 @@
 
 namespace Teamspeak3\Adapter\ServerQuery;
 
-use Teamspeak3\Helper\TeamSpeak3_Helper_String;
-use Teamspeak3\Node\TeamSpeak3_Node_Host;
-use Teamspeak3\Adapter\TeamSpeak3_Adapter_Exception;
+use Teamspeak3\Helper\String;
+use Teamspeak3\Node\Host;
+use Teamspeak3\Adapter\Ts3Exception;
 use Teamspeak3\TeamSpeak3;
-use Teamspeak3\Helper\TeamSpeak3_Helper_Signal;
-use Teamspeak3\Node\TeamSpeak3_Node_Exception;
+use Teamspeak3\Helper\Signal;
+use Teamspeak3\Node\Ts3Exception;
 
 use ArrayAccess;
 
 /**
- * @class TeamSpeak3_Adapter_ServerQuery_Event
+ * @class Event
  * @brief Provides methods to analyze and format a ServerQuery event.
  */
-class TeamSpeak3_Adapter_ServerQuery_Event implements ArrayAccess
+class Event implements ArrayAccess
 {
     /**
      * Stores the event type.
      *
-     * @var TeamSpeak3_Helper_String
+     * @var String
      */
     protected $type = null;
 
@@ -59,47 +59,47 @@ class TeamSpeak3_Adapter_ServerQuery_Event implements ArrayAccess
     /**
      * Stores the event data as an unparsed string.
      *
-     * @var TeamSpeak3_Helper_String
+     * @var String
      */
     protected $mesg = null;
 
     /**
-     * Creates a new TeamSpeak3_Adapter_ServerQuery_Event object.
+     * Creates a new Event object.
      *
-     * @param  TeamSpeak3_Helper_String $evt
-     * @param  TeamSpeak3_Node_Host $con
-     * @throws TeamSpeak3_Adapter_Exception
-     * @return TeamSpeak3_Adapter_ServerQuery_Event
+     * @param  String $evt
+     * @param  Host $con
+     * @throws Ts3Exception
+     * @return Event
      */
-    public function __construct(TeamSpeak3_Helper_String $evt, TeamSpeak3_Node_Host $con = null)
+    public function __construct(String $evt, Host $con = null)
     {
         if (!$evt->startsWith(TeamSpeak3::EVENT)) {
-            throw new TeamSpeak3_Adapter_Exception("invalid notification event format");
+            throw new Ts3Exception("invalid notification event format");
         }
 
         list($type, $data) = $evt->split(TeamSpeak3::SEPARATOR_CELL, 2);
 
         if (empty($data)) {
-            throw new TeamSpeak3_Adapter_Exception("invalid notification event data");
+            throw new Ts3Exception("invalid notification event data");
         }
 
-        $fake = new TeamSpeak3_Helper_String(
+        $fake = new String(
             TeamSpeak3::ERROR . TeamSpeak3::SEPARATOR_CELL . "id" . TeamSpeak3::SEPARATOR_PAIR . 0 . TeamSpeak3::SEPARATOR_CELL . "msg" . TeamSpeak3::SEPARATOR_PAIR . "ok"
         );
-        $repl = new TeamSpeak3_Adapter_ServerQuery_Reply(array($data, $fake), $type);
+        $repl = new Reply(array($data, $fake), $type);
 
         $this->type = $type->substr(strlen(TeamSpeak3::EVENT));
         $this->data = $repl->toList();
         $this->mesg = $data;
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("notifyEvent", $this, $con);
-        TeamSpeak3_Helper_Signal::getInstance()->emit("notify" . ucfirst($this->type), $this, $con);
+        Signal::getInstance()->emit("notifyEvent", $this, $con);
+        Signal::getInstance()->emit("notify" . ucfirst($this->type), $this, $con);
     }
 
     /**
      * Returns the event type string.
      *
-     * @return TeamSpeak3_Helper_String
+     * @return String
      */
     public function getType()
     {
@@ -119,7 +119,7 @@ class TeamSpeak3_Adapter_ServerQuery_Event implements ArrayAccess
     /**
      * Returns the event data as an unparsed string.
      *
-     * @return TeamSpeak3_Helper_String
+     * @return String
      */
     public function getMessage()
     {
@@ -140,7 +140,7 @@ class TeamSpeak3_Adapter_ServerQuery_Event implements ArrayAccess
     public function offsetGet($offset)
     {
         if (!$this->offsetExists($offset)) {
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid parameter", 0x602);
+            throw new Ts3Exception("invalid parameter", 0x602);
         }
 
         return $this->data[$offset];
@@ -151,7 +151,7 @@ class TeamSpeak3_Adapter_ServerQuery_Event implements ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        throw new TeamSpeak3_Node_Exception("event '" . $this->getType() . "' is read only");
+        throw new Ts3Exception("event '" . $this->getType() . "' is read only");
     }
 
     /**

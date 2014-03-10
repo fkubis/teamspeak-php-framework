@@ -28,15 +28,15 @@
 namespace Teamspeak3\Helper;
 
 /**
- * @class TeamSpeak3_Helper_Signal
+ * @class Signal
  * @brief Helper class for signal slots.
  */
-class TeamSpeak3_Helper_Signal
+class Signal
 {
     /**
-     * Stores the TeamSpeak3_Helper_Signal object.
+     * Stores the Signal object.
      *
-     * @var TeamSpeak3_Helper_Signal
+     * @var Signal
      */
     protected static $instance = null;
 
@@ -186,9 +186,9 @@ class TeamSpeak3_Helper_Signal
     }
 
     /**
-     * Returns a singleton instance of TeamSpeak3_Helper_Signal.
+     * Returns a singleton instance of Signal.
      *
-     * @return TeamSpeak3_Helper_Signal
+     * @return Signal
      */
     public static function getInstance()
     {

@@ -28,21 +28,21 @@
 namespace Teamspeak3\Node;
 
 /**
- * @class TeamSpeak3_Node_Channelgroup
+ * @class Channelgroug
  * @brief Class describing a TeamSpeak 3 channel group and all it's parameters.
  */
-class TeamSpeak3_Node_Channelgroup extends TeamSpeak3_Node_Abstract
+class Channelgroug extends AbstractNode
 {
     /**
-     * The TeamSpeak3_Node_Channelgroup constructor.
+     * The Channelgroug constructor.
      *
-     * @param  TeamSpeak3_Node_Server $server
+     * @param  Server $server
      * @param  array $info
      * @param  string $index
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Channelgroup
+     * @return Channelgroug
      */
-    public function __construct(TeamSpeak3_Node_Server $server, array $info, $index = "cgid")
+    public function __construct(Server $server, array $info, $index = "cgid")
     {
         $this->parent = $server;
         $this->nodeInfo = $info;

@@ -27,28 +27,27 @@
 
 namespace Teamspeak3\Adapter;
 
-use Teamspeak3\Adapter\TeamSpeak3_Adapter_Exception;
-use Teamspeak3\Adapter\ServerQuery\TeamSpeak3_Adapter_ServerQuery_Event;
-use Teamspeak3\Adapter\ServerQuery\TeamSpeak3_Adapter_ServerQuery_Exception;
-use Teamspeak3\Adapter\ServerQuery\TeamSpeak3_Adapter_ServerQuery_Reply;
-use Teamspeak3\Node\TeamSpeak3_Node_Host;
-use Teamspeak3\Helper\TeamSpeak3_Helper_Profiler;
-use Teamspeak3\Helper\TeamSpeak3_Helper_Signal;
-use Teamspeak3\Transport\TeamSpeak3_Transport_Abstract;
-use Teamspeak3\Helper\TeamSpeak3_Helper_String;
 use Teamspeak3\TeamSpeak3;
-use Teamspeak3\Node\TeamSpeak3_Node_Abstract;
+use Teamspeak3\Ts3Exception;
+use Teamspeak3\Adapter\ServerQuery\Event;
+use Teamspeak3\Adapter\ServerQuery\Reply;
+use Teamspeak3\Node\Host;
+use Teamspeak3\Helper\Profiler;
+use Teamspeak3\Helper\Signal;
+use Teamspeak3\Transport\AbstractTransport;
+use Teamspeak3\Helper\String;
+use Teamspeak3\Node\AbstractNode;
 
 /**
- * @class TeamSpeak3_Adapter_ServerQuery
+ * @class ServerQuery
  * @brief Provides low-level methods for ServerQuery communication with a TeamSpeak 3 Server.
  */
-class TeamSpeak3_Adapter_ServerQuery extends TeamSpeak3_Adapter_Abstract
+class ServerQuery extends AbstractAdapter
 {
     /**
-     * Stores a singleton instance of the active TeamSpeak3_Node_Host object.
+     * Stores a singleton instance of the active Host object.
      *
-     * @var TeamSpeak3_Node_Host
+     * @var Host
      */
     protected $host = null;
 
@@ -74,10 +73,10 @@ class TeamSpeak3_Adapter_ServerQuery extends TeamSpeak3_Adapter_Abstract
     protected $block = array("help");
 
     /**
-     * Connects the TeamSpeak3_Transport_Abstract object and performs initial actions on the remote
+     * Connects the AbstractTransport object and performs initial actions on the remote
      * server.
      *
-     * @throws TeamSpeak3_Adapter_Exception
+     * @throws Ts3Exception
      * @return void
      */
     protected function syn()
@@ -85,26 +84,26 @@ class TeamSpeak3_Adapter_ServerQuery extends TeamSpeak3_Adapter_Abstract
         $this->initTransport($this->options);
         $this->transport->setAdapter($this);
 
-        TeamSpeak3_Helper_Profiler::init(spl_object_hash($this));
+        Profiler::init(spl_object_hash($this));
 
         if (!$this->getTransport()->readLine()->startsWith(TeamSpeak3::READY)) {
-            throw new TeamSpeak3_Adapter_Exception("invalid reply from the server");
+            throw new Ts3Exception("invalid reply from the server");
         }
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("serverqueryConnected", $this);
+        Signal::getInstance()->emit("serverqueryConnected", $this);
     }
 
     /**
-     * The TeamSpeak3_Adapter_ServerQuery destructor.
+     * The ServerQuery destructor.
      *
      * @return void
      */
     public function __destruct()
     {
-        if ($this->getTransport() instanceof TeamSpeak3_Transport_Abstract && $this->transport->isConnected()) {
+        if ($this->getTransport() instanceof AbstractTransport && $this->transport->isConnected()) {
             try {
                 $this->request("quit");
-            } catch (Exception $e) {
+            } catch (Ts3Exception $e) {
                 return;
             }
         }
@@ -115,21 +114,21 @@ class TeamSpeak3_Adapter_ServerQuery extends TeamSpeak3_Adapter_Abstract
      *
      * @param  string $cmd
      * @param  boolean $throw
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @throws TeamSpeak3_Adapter_Exception
-     * @return TeamSpeak3_Adapter_ServerQuery_Reply
+     * @throws Ts3Exception
+     * @throws Ts3Exception
+     * @return Reply
      */
     public function request($cmd, $throw = true)
     {
-        $query = TeamSpeak3_Helper_String::factory($cmd)->section(TeamSpeak3::SEPARATOR_CELL);
+        $query = String::factory($cmd)->section(TeamSpeak3::SEPARATOR_CELL);
 
         if (strstr($cmd, "\r") || strstr($cmd, "\n")) {
-            throw new TeamSpeak3_Adapter_Exception("illegal characters in command '" . $query . "'");
+            throw new Ts3Exception("illegal characters in command '" . $query . "'");
         } elseif (in_array($query, $this->block)) {
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception("command not found", 0x100);
+            throw new Ts3Exception("command not found", 0x100);
         }
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("serverqueryCommandStarted", $cmd);
+        Signal::getInstance()->emit("serverqueryCommandStarted", $cmd);
 
         $this->getProfiler()->start();
         $this->getTransport()->sendLine($cmd);
@@ -141,15 +140,15 @@ class TeamSpeak3_Adapter_ServerQuery extends TeamSpeak3_Adapter_Abstract
         do {
             $str = $this->getTransport()->readLine();
             $rpl[] = $str;
-        } while ($str instanceof TeamSpeak3_Helper_String && $str->section(
+        } while ($str instanceof String && $str->section(
                 TeamSpeak3::SEPARATOR_CELL
             ) != TeamSpeak3::ERROR);
 
         $this->getProfiler()->stop();
 
-        $reply = new TeamSpeak3_Adapter_ServerQuery_Reply($rpl, $cmd, $this->getHost(), $throw);
+        $reply = new Reply($rpl, $cmd, $this->getHost(), $throw);
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("serverqueryCommandFinished", $cmd, $reply);
+        Signal::getInstance()->emit("serverqueryCommandFinished", $cmd, $reply);
 
         return $reply;
     }
@@ -157,22 +156,22 @@ class TeamSpeak3_Adapter_ServerQuery extends TeamSpeak3_Adapter_Abstract
     /**
      * Waits for the server to send a notification message and returns the result.
      *
-     * @throws TeamSpeak3_Adapter_Exception
-     * @return TeamSpeak3_Adapter_ServerQuery_Event
+     * @throws Ts3Exception
+     * @return Event
      */
     public function wait()
     {
         if ($this->getTransport()->getConfig("blocking")) {
-            throw new TeamSpeak3_Adapter_Exception("only available in non-blocking mode");
+            throw new Ts3Exception("only available in non-blocking mode");
         }
 
         do {
             $evt = $this->getTransport()->readLine();
-        } while ($evt instanceof TeamSpeak3_Helper_String && !$evt->section(TeamSpeak3::SEPARATOR_CELL)->startsWith(
+        } while ($evt instanceof String && !$evt->section(TeamSpeak3::SEPARATOR_CELL)->startsWith(
                 TeamSpeak3::EVENT
             ));
 
-        return new TeamSpeak3_Adapter_ServerQuery_Event($evt, $this->getHost());
+        return new Event($evt, $this->getHost());
     }
 
     /**
@@ -200,11 +199,11 @@ class TeamSpeak3_Adapter_ServerQuery extends TeamSpeak3_Adapter_Abstract
                         $value[$i] = 0x00;
                     } elseif ($value[$i] === true) {
                         $value[$i] = 0x01;
-                    } elseif ($value[$i] instanceof TeamSpeak3_Node_Abstract) {
+                    } elseif ($value[$i] instanceof AbstractNode) {
                         $value[$i] = $value[$i]->getId();
                     }
 
-                    $cells[$i][] = $ident . TeamSpeak3_Helper_String::factory($value[$i])->escape()->toUtf8();
+                    $cells[$i][] = $ident . String::factory($value[$i])->escape()->toUtf8();
                 }
             } else {
                 if ($value === null) {
@@ -213,11 +212,11 @@ class TeamSpeak3_Adapter_ServerQuery extends TeamSpeak3_Adapter_Abstract
                     $value = 0x00;
                 } elseif ($value === true) {
                     $value = 0x01;
-                } elseif ($value instanceof TeamSpeak3_Node_Abstract) {
+                } elseif ($value instanceof AbstractNode) {
                     $value = $value->getId();
                 }
 
-                $args[] = $ident . TeamSpeak3_Helper_String::factory($value)->escape()->toUtf8();
+                $args[] = $ident . String::factory($value)->escape()->toUtf8();
             }
         }
 
@@ -266,14 +265,14 @@ class TeamSpeak3_Adapter_ServerQuery extends TeamSpeak3_Adapter_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Host object of the current connection.
+     * Returns the Host object of the current connection.
      *
-     * @return TeamSpeak3_Node_Host
+     * @return Host
      */
     public function getHost()
     {
         if ($this->host === null) {
-            $this->host = new TeamSpeak3_Node_Host($this);
+            $this->host = new Host($this);
         }
 
         return $this->host;

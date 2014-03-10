@@ -28,10 +28,10 @@
 namespace Teamspeak3\Node;
 
 /**
- * @class TeamSpeak3_Node_Server
+ * @class Server
  * @brief Class describing a TeamSpeak 3 virtual server and all it's parameters.
  */
-class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
+class Server extends AbstractNode
 {
     /**
      * @ignore
@@ -54,15 +54,15 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
     protected $cgroupList = null;
 
     /**
-     * The TeamSpeak3_Node_Server constructor.
+     * The Server constructor.
      *
-     * @param  TeamSpeak3_Node_Host $host
+     * @param  Host $host
      * @param  array $info
      * @param  string $index
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Server
+     * @return Server
      */
-    public function __construct(TeamSpeak3_Node_Host $host, array $info, $index = "virtualserver_id")
+    public function __construct(Host $host, array $info, $index = "virtualserver_id")
     {
         $this->parent = $host;
         $this->nodeInfo = $info;
@@ -91,7 +91,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns an array filled with TeamSpeak3_Node_Channel objects.
+     * Returns an array filled with Channel objects.
      *
      * @param  array $filter
      * @return array
@@ -104,7 +104,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
             $this->channelList = array();
 
             foreach ($channels as $cid => $channel) {
-                $this->channelList[$cid] = new TeamSpeak3_Node_Channel($this, $channel);
+                $this->channelList[$cid] = new Channel($this, $channel);
             }
 
             $this->resetNodeList();
@@ -154,7 +154,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
         $this->execute("channeldelete", array("cid" => $cid, "force" => $force));
         $this->channelListReset();
 
-        if (($cid instanceof TeamSpeak3_Node_Abstract ? $cid->getId() : $cid) == $this->whoamiGet(
+        if (($cid instanceof AbstractNode ? $cid->getId() : $cid) == $this->whoamiGet(
                 "client_channel_id"
             )
         ) {
@@ -177,12 +177,12 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns TRUE if the given TeamSpeak3_Node_Channel object is a spacer.
+     * Returns TRUE if the given Channel object is a spacer.
      *
-     * @param  TeamSpeak3_Node_Channel $channel
+     * @param  Channel $channel
      * @return boolean
      */
-    public function channelIsSpacer(TeamSpeak3_Node_Channel $channel)
+    public function channelIsSpacer(Channel $channel)
     {
         return (preg_match(
                 "/\[[^\]]*spacer[^\]]*\]/",
@@ -598,11 +598,11 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Channel object matching the given ID.
+     * Returns the Channel object matching the given ID.
      *
      * @param  integer $cid
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Channel
+     * @return Channel
      */
     public function channelGetById($cid)
     {
@@ -614,11 +614,11 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Channel object matching the given name.
+     * Returns the Channel object matching the given name.
      *
      * @param  string $name
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Channel
+     * @return Channel
      */
     public function channelGetByName($name)
     {
@@ -632,7 +632,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns an array filled with TeamSpeak3_Node_Client objects.
+     * Returns an array filled with Client objects.
      *
      * @param  array $filter
      * @return array
@@ -651,7 +651,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
                     continue;
                 }
 
-                $this->clientList[$clid] = new TeamSpeak3_Node_Client($this, $client);
+                $this->clientList[$clid] = new Client($this, $client);
             }
 
             uasort($this->clientList, array(__CLASS__, "sortClientList"));
@@ -750,11 +750,11 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Client object matching the given ID.
+     * Returns the Client object matching the given ID.
      *
      * @param  integer $clid
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Client
+     * @return Client
      */
     public function clientGetById($clid)
     {
@@ -766,11 +766,11 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Client object matching the given name.
+     * Returns the Client object matching the given name.
      *
      * @param  string $name
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Client
+     * @return Client
      */
     public function clientGetByName($name)
     {
@@ -784,11 +784,11 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Client object matching the given unique identifier.
+     * Returns the Client object matching the given unique identifier.
      *
      * @param  string $uid
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Client
+     * @return Client
      */
     public function clientGetByUid($uid)
     {
@@ -802,11 +802,11 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Client object matching the given database ID.
+     * Returns the Client object matching the given database ID.
      *
      * @param  integer $dbid
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Client
+     * @return Client
      */
     public function clientGetByDbid($dbid)
     {
@@ -881,11 +881,11 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
 
         $this->execute("clientmove", array("clid" => $clid, "cid" => $cid, "cpw" => $cpw));
 
-        if ($clid instanceof TeamSpeak3_Node_Abstract) {
+        if ($clid instanceof AbstractNode) {
             $clid = $clid->getId();
         }
 
-        if ($cid instanceof TeamSpeak3_Node_Abstract) {
+        if ($cid instanceof AbstractNode) {
             $cid = $cid->getId();
         }
 
@@ -1050,7 +1050,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
             $this->sgroupList = $this->request("servergrouplist")->toAssocArray("sgid");
 
             foreach ($this->sgroupList as $sgid => $group) {
-                $this->sgroupList[$sgid] = new TeamSpeak3_Node_Servergroup($this, $group);
+                $this->sgroupList[$sgid] = new Servergroup($this, $group);
             }
 
             uasort($this->sgroupList, array(__CLASS__, "sortGroupList"));
@@ -1140,11 +1140,11 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Servergroup object matching the given ID.
+     * Returns the Servergroup object matching the given ID.
      *
      * @param  integer $sgid
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Servergroup
+     * @return Servergroup
      */
     public function serverGroupGetById($sgid)
     {
@@ -1156,12 +1156,12 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Servergroup object matching the given name.
+     * Returns the Servergroup object matching the given name.
      *
      * @param  string $name
      * @param  integer $type
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Servergroup
+     * @return Servergroup
      */
     public function serverGroupGetByName($name, $type = TeamSpeak3::GROUP_DBTYPE_REGULAR)
     {
@@ -1360,7 +1360,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
      * the ID.
      *
      * @param  integer $mode
-     * @return TeamSpeak3_Node_Servergroup
+     * @return Servergroup
      */
     public function serverGroupIdentify($mode = TeamSpeak3::GROUP_IDENTIFIY_STRONGEST)
     {
@@ -1385,7 +1385,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
             $this->cgroupList = $this->request("channelgrouplist")->toAssocArray("cgid");
 
             foreach ($this->cgroupList as $cgid => $group) {
-                $this->cgroupList[$cgid] = new TeamSpeak3_Node_Channelgroup($this, $group);
+                $this->cgroupList[$cgid] = new Channelgroug($this, $group);
             }
 
             uasort($this->cgroupList, array(__CLASS__, "sortGroupList"));
@@ -1475,11 +1475,11 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Channelgroup object matching the given ID.
+     * Returns the Channelgroug object matching the given ID.
      *
      * @param  integer $cgid
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Channelgroup
+     * @return Channelgroug
      */
     public function channelGroupGetById($cgid)
     {
@@ -1491,12 +1491,12 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Channelgroup object matching the given name.
+     * Returns the Channelgroug object matching the given name.
      *
      * @param  string $name
      * @param  integer $type
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Channelgroup
+     * @return Channelgroug
      */
     public function channelGroupGetByName($name, $type = TeamSpeak3::GROUP_DBTYPE_REGULAR)
     {
@@ -1976,7 +1976,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
 
                 try {
                     $tokens[$token]["token_id1"] = $this->$func($array["token_id1"])->name;
-                } catch (Exception $e) {
+                } catch (Ts3Exception $e) {
                     /* ERROR_channel_invalid_id */
                     if ($e->getCode() != 0xA00) {
                         throw $e;
@@ -1989,7 +1989,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
                             $array["token_id2"]
                         )->getPathway();
                     }
-                } catch (Exception $e) {
+                } catch (Ts3Exception $e) {
                     /* ERROR_permission_invalid_group_id */
                     if ($e->getCode() != 0x300) {
                         throw $e;
@@ -2229,7 +2229,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
 
                     $passwords[$password]["tcname"] = $channel->toString();
                     $passwords[$password]["tcpath"] = $channel->getPathway();
-                } catch (Exception $e) {
+                } catch (Ts3Exception $e) {
                     /* ERROR_channel_invalid_id */
                     if ($e->getCode() != 0xA00) {
                         throw $e;
@@ -2430,11 +2430,11 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
     /**
      * Internal callback funtion for sorting of client objects.
      *
-     * @param  TeamSpeak3_Node_Client $a
-     * @param  TeamSpeak3_Node_Client $b
+     * @param  Client $a
+     * @param  Client $b
      * @return integer
      */
-    protected static function sortClientList(TeamSpeak3_Node_Client $a, TeamSpeak3_Node_Client $b)
+    protected static function sortClientList(Client $a, Client $b)
     {
         if (get_class($a) != get_class($b)) {
             return 0;
@@ -2443,7 +2443,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
             throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid parameter", 0x602);
         }
 
-        if (!$a instanceof TeamSpeak3_Node_Client) {
+        if (!$a instanceof Client) {
             return 0;
 
             /* workaround for PHP bug #50688 */
@@ -2464,11 +2464,11 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
     /**
      * Internal callback funtion for sorting of group objects.
      *
-     * @param  TeamSpeak3_Node_Abstract $a
-     * @param  TeamSpeak3_Node_Abstract $b
+     * @param  AbstractNode $a
+     * @param  AbstractNode $b
      * @return integer
      */
-    protected static function sortGroupList(TeamSpeak3_Node_Abstract $a, TeamSpeak3_Node_Abstract $b)
+    protected static function sortGroupList(AbstractNode $a, AbstractNode $b)
     {
         if (get_class($a) != get_class($b)) {
             return 0;
@@ -2477,7 +2477,7 @@ class TeamSpeak3_Node_Server extends TeamSpeak3_Node_Abstract
             throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid parameter", 0x602);
         }
 
-        if (!$a instanceof TeamSpeak3_Node_Servergroup && !$a instanceof TeamSpeak3_Node_Channelgroup) {
+        if (!$a instanceof Servergroup && !$a instanceof Channelgroug) {
             return 0;
 
             /* workaround for PHP bug #50688 */

@@ -28,10 +28,10 @@
 namespace Teamspeak3\Node;
 
 /**
- * @class TeamSpeak3_Node_Host
+ * @class Host
  * @brief Class describing a TeamSpeak 3 server instance and all it's parameters.
  */
-class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
+class Host extends AbstractNode
 {
     /**
      * @ignore
@@ -84,10 +84,10 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
     protected $sort_clients_channels = false;
 
     /**
-     * The TeamSpeak3_Node_Host constructor.
+     * The Host constructor.
      *
      * @param  TeamSpeak3_Adapter_ServerQuery $squery
-     * @return TeamSpeak3_Node_Host
+     * @return Host
      */
     public function __construct(TeamSpeak3_Adapter_ServerQuery $squery)
     {
@@ -240,9 +240,9 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Server object matching the currently selected ID.
+     * Returns the Server object matching the currently selected ID.
      *
-     * @return TeamSpeak3_Node_Server
+     * @return Server
      */
     public function serverGetSelected()
     {
@@ -250,37 +250,37 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Server object matching the given ID.
+     * Returns the Server object matching the given ID.
      *
      * @param  integer $sid
-     * @return TeamSpeak3_Node_Server
+     * @return Server
      */
     public function serverGetById($sid)
     {
         $this->serverSelectById($sid);
 
-        return new TeamSpeak3_Node_Server($this, array("virtualserver_id" => intval($sid)));
+        return new Server($this, array("virtualserver_id" => intval($sid)));
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Server object matching the given port number.
+     * Returns the Server object matching the given port number.
      *
      * @param  integer $port
-     * @return TeamSpeak3_Node_Server
+     * @return Server
      */
     public function serverGetByPort($port)
     {
         $this->serverSelectByPort($port);
 
-        return new TeamSpeak3_Node_Server($this, array("virtualserver_id" => $this->serverSelectedId()));
+        return new Server($this, array("virtualserver_id" => $this->serverSelectedId()));
     }
 
     /**
-     * Returns the first TeamSpeak3_Node_Server object matching the given name.
+     * Returns the first Server object matching the given name.
      *
      * @param  string $name
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Server
+     * @return Server
      */
     public function serverGetByName($name)
     {
@@ -294,11 +294,11 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the first TeamSpeak3_Node_Server object matching the given unique identifier.
+     * Returns the first Server object matching the given unique identifier.
      *
      * @param  string $uid
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Server
+     * @return Server
      */
     public function serverGetByUid($uid)
     {
@@ -312,13 +312,13 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the first TeamSpeak3_Node_Server object matching the given TSDNS hostname. Like the
+     * Returns the first Server object matching the given TSDNS hostname. Like the
      * TeamSpeak 3 Client, this method will start looking for a TSDNS server on the second-level
      * domain including a fallback to the third-level domain of the specified $tsdns parameter.
      *
      * @param  string $tsdns
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Server
+     * @return Server
      */
     public function serverGetByTSDNS($tsdns)
     {
@@ -355,7 +355,7 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
         $this->serverListReset();
 
         $detail = $this->execute("servercreate", $properties)->toList();
-        $server = new TeamSpeak3_Node_Server($this, array("virtualserver_id" => intval($detail["sid"])));
+        $server = new Server($this, array("virtualserver_id" => intval($detail["sid"])));
 
         TeamSpeak3_Helper_Signal::getInstance()->emit("notifyServercreated", $this, $detail["sid"]);
         TeamSpeak3_Helper_Signal::getInstance()->emit("notifyTokencreated", $server, $detail["token"]);
@@ -427,7 +427,7 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns an array filled with TeamSpeak3_Node_Server objects.
+     * Returns an array filled with Server objects.
      *
      * @param  array $filter
      * @return array
@@ -440,7 +440,7 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
             $this->serverList = array();
 
             foreach ($servers as $sid => $server) {
-                $this->serverList[$sid] = new TeamSpeak3_Node_Server($this, $server);
+                $this->serverList[$sid] = new Server($this, $server);
             }
 
             $this->resetNodeList();
@@ -1082,9 +1082,9 @@ class TeamSpeak3_Node_Host extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the underlying TeamSpeak3_Adapter_ServerQuery object.
+     * Returns the underlying ServerQuery object.
      *
-     * @return TeamSpeak3_Adapter_ServerQuery
+     * @return ServerQuery
      */
     public function getAdapter()
     {

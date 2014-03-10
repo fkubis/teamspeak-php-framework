@@ -4,7 +4,7 @@
  * @file
  * TeamSpeak 3 PHP Framework
  *
- * $Id: Abstract.php 10/11/2013 11:35:21 scp@orilla $
+ * $Id: AbstractAdapter.php 10/11/2013 11:35:21 scp@orilla $
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,10 +28,10 @@
 namespace Teamspeak3\Node;
 
 /**
- * @class TeamSpeak3_Node_Abstract
+ * @class AbstractNode
  * @brief Abstract class describing a TeamSpeak 3 node and all it's parameters.
  */
-abstract class TeamSpeak3_Node_Abstract implements RecursiveIterator, ArrayAccess, Countable
+abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
 {
     /**
      * @ignore
@@ -103,7 +103,7 @@ abstract class TeamSpeak3_Node_Abstract implements RecursiveIterator, ArrayAcces
      * Returns the parent object of the current node.
      *
      * @return TeamSpeak3_Adapter_ServerQuery
-     * @return TeamSpeak3_Node_Abstract
+     * @return AbstractNode
      */
     public function getParent()
     {
@@ -152,9 +152,9 @@ abstract class TeamSpeak3_Node_Abstract implements RecursiveIterator, ArrayAcces
      */
     public function getClass($prefix = "ts3_")
     {
-        if ($this instanceof TeamSpeak3_Node_Channel && $this->isSpacer()) {
+        if ($this instanceof Channel && $this->isSpacer()) {
             return $prefix . "spacer";
-        } elseif ($this instanceof TeamSpeak3_Node_Client && $this["client_type"]) {
+        } elseif ($this instanceof Client && $this["client_type"]) {
             return $prefix . "query";
         }
 
@@ -220,7 +220,7 @@ abstract class TeamSpeak3_Node_Abstract implements RecursiveIterator, ArrayAcces
     {
         if (!empty($rules)) {
             foreach ($nodes as $node) {
-                if (!$node instanceof TeamSpeak3_Node_Abstract) {
+                if (!$node instanceof AbstractNode) {
                     continue;
                 }
 
@@ -343,16 +343,16 @@ abstract class TeamSpeak3_Node_Abstract implements RecursiveIterator, ArrayAcces
      *
      * @param  string $name
      * @param  array $args
-     * @throws TeamSpeak3_Node_Exception
+     * @throws Ts3Exception
      * @return mixed
      */
     public function __call($name, array $args)
     {
-        if ($this->getParent() instanceof TeamSpeak3_Node_Abstract) {
+        if ($this->getParent() instanceof AbstractNode) {
             return call_user_func_array(array($this->getParent(), $name), $args);
         }
 
-        throw new TeamSpeak3_Node_Exception("node method '" . $name . "()' does not exist");
+        throw new Ts3Exception("node method '" . $name . "()' does not exist");
     }
 
     /**
@@ -568,7 +568,7 @@ abstract class TeamSpeak3_Node_Abstract implements RecursiveIterator, ArrayAcces
             return $this->modify(array((string)$offset => $value));
         }
 
-        throw new TeamSpeak3_Node_Exception("node '" . get_class($this) . "' is read only");
+        throw new Ts3Exception("node '" . get_class($this) . "' is read only");
     }
 
     /**

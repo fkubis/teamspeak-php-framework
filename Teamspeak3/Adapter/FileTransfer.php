@@ -27,24 +27,24 @@
 
 namespace Teamspeak3\Adapter;
 
-use Teamspeak3\Adapter\TeamSpeak3_Adapter_Abstract;
-use Teamspeak3\Helper\TeamSpeak3_Helper_Profiler;
-use Teamspeak3\Helper\TeamSpeak3_Helper_Signal;
-use Teamspeak3\Transport\TeamSpeak3_Transport_Abstract;
-use Teamspeak3\Adapter\FileTransfer\TeamSpeak3_Adapter_FileTransfer_Exception;
-use Teamspeak3\Helper\TeamSpeak3_Helper_String;
+use Teamspeak3\Adapter\AbstractAdapter;
+use Teamspeak3\Helper\Profiler;
+use Teamspeak3\Helper\Signal;
+use Teamspeak3\Transport\AbstractTransport;
+use Teamspeak3\Adapter\FileTransfer\Ts3Exception;
+use Teamspeak3\Helper\String;
 
 /**
- * @class TeamSpeak3_Adapter_FileTransfer
+ * @class FileTransfer
  * @brief Provides low-level methods for file transfer communication with a TeamSpeak 3 Server.
  */
-class TeamSpeak3_Adapter_FileTransfer extends TeamSpeak3_Adapter_Abstract
+class FileTransfer extends AbstractAdapter
 {
     /**
-     * Connects the TeamSpeak3_Transport_Abstract object and performs initial actions on the remote
+     * Connects the AbstractTransport object and performs initial actions on the remote
      * server.
      *
-     * @throws TeamSpeak3_Adapter_Exception
+     * @throws Ts3Exception
      * @return void
      */
     public function syn()
@@ -52,19 +52,19 @@ class TeamSpeak3_Adapter_FileTransfer extends TeamSpeak3_Adapter_Abstract
         $this->initTransport($this->options);
         $this->transport->setAdapter($this);
 
-        TeamSpeak3_Helper_Profiler::init(spl_object_hash($this));
+        Profiler::init(spl_object_hash($this));
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("filetransferConnected", $this);
+        Signal::getInstance()->emit("filetransferConnected", $this);
     }
 
     /**
-     * The TeamSpeak3_Adapter_FileTransfer destructor.
+     * The FileTransfer destructor.
      *
      * @return void
      */
     public function __destruct()
     {
-        if ($this->getTransport() instanceof TeamSpeak3_Transport_Abstract && $this->getTransport()->isConnected()) {
+        if ($this->getTransport() instanceof AbstractTransport && $this->getTransport()->isConnected()) {
             $this->getTransport()->disconnect();
         }
     }
@@ -73,19 +73,19 @@ class TeamSpeak3_Adapter_FileTransfer extends TeamSpeak3_Adapter_Abstract
      * Sends a valid file transfer key to the server to initialize the file transfer.
      *
      * @param  string $ftkey
-     * @throws TeamSpeak3_Adapter_FileTransfer_Exception
+     * @throws Ts3Exception
      * @return void
      */
     protected function init($ftkey)
     {
         if (strlen($ftkey) != 32) {
-            throw new TeamSpeak3_Adapter_FileTransfer_Exception("invalid file transfer key format");
+            throw new Ts3Exception("invalid file transfer key format");
         }
 
         $this->getProfiler()->start();
         $this->getTransport()->send($ftkey);
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("filetransferHandshake", $this);
+        Signal::getInstance()->emit("filetransferHandshake", $this);
     }
 
     /**
@@ -94,7 +94,7 @@ class TeamSpeak3_Adapter_FileTransfer extends TeamSpeak3_Adapter_Abstract
      * @param  string $ftkey
      * @param  integer $seek
      * @param  string $data
-     * @throws TeamSpeak3_Adapter_FileTransfer_Exception
+     * @throws Ts3Exception
      * @return void
      */
     public function upload($ftkey, $seek, $data)
@@ -105,7 +105,7 @@ class TeamSpeak3_Adapter_FileTransfer extends TeamSpeak3_Adapter_Abstract
         $seek = intval($seek);
         $pack = 4096;
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("filetransferUploadStarted", $ftkey, $seek, $size);
+        Signal::getInstance()->emit("filetransferUploadStarted", $ftkey, $seek, $size);
 
         for (; $seek < $size;) {
             $rest = $size - $seek;
@@ -115,28 +115,28 @@ class TeamSpeak3_Adapter_FileTransfer extends TeamSpeak3_Adapter_Abstract
 
             $this->getTransport()->send($buff);
 
-            TeamSpeak3_Helper_Signal::getInstance()->emit("filetransferUploadProgress", $ftkey, $seek, $size);
+            Signal::getInstance()->emit("filetransferUploadProgress", $ftkey, $seek, $size);
         }
 
         $this->getProfiler()->stop();
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("filetransferUploadFinished", $ftkey, $seek, $size);
+        Signal::getInstance()->emit("filetransferUploadFinished", $ftkey, $seek, $size);
 
         if ($seek < $size) {
-            throw new TeamSpeak3_Adapter_FileTransfer_Exception(
+            throw new Ts3Exception(
                 "incomplete file upload (" . $seek . " of " . $size . " bytes)"
             );
         }
     }
 
     /**
-     * Returns the content of a downloaded file as a TeamSpeak3_Helper_String object.
+     * Returns the content of a downloaded file as a String object.
      *
      * @param  string $ftkey
      * @param  integer $size
      * @param  boolean $passthru
-     * @throws TeamSpeak3_Adapter_FileTransfer_Exception
-     * @return TeamSpeak3_Helper_String
+     * @throws Ts3Exception
+     * @return String
      */
     public function download($ftkey, $size, $passthru = false)
     {
@@ -146,11 +146,11 @@ class TeamSpeak3_Adapter_FileTransfer extends TeamSpeak3_Adapter_Abstract
             return $this->passthru($size);
         }
 
-        $buff = new TeamSpeak3_Helper_String("");
+        $buff = new String("");
         $size = intval($size);
         $pack = 4096;
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("filetransferDownloadStarted", $ftkey, count($buff), $size);
+        Signal::getInstance()->emit("filetransferDownloadStarted", $ftkey, count($buff), $size);
 
         for ($seek = 0; $seek < $size;) {
             $rest = $size - $seek;
@@ -160,15 +160,15 @@ class TeamSpeak3_Adapter_FileTransfer extends TeamSpeak3_Adapter_Abstract
 
             $buff->append($data);
 
-            TeamSpeak3_Helper_Signal::getInstance()->emit("filetransferDownloadProgress", $ftkey, count($buff), $size);
+            Signal::getInstance()->emit("filetransferDownloadProgress", $ftkey, count($buff), $size);
         }
 
         $this->getProfiler()->stop();
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("filetransferDownloadFinished", $ftkey, count($buff), $size);
+        Signal::getInstance()->emit("filetransferDownloadFinished", $ftkey, count($buff), $size);
 
         if (strlen($buff) != $size) {
-            throw new TeamSpeak3_Adapter_FileTransfer_Exception(
+            throw new Ts3Exception(
                 "incomplete file download (" . count($buff) . " of " . $size . " bytes)"
             );
         }
@@ -181,7 +181,7 @@ class TeamSpeak3_Adapter_FileTransfer extends TeamSpeak3_Adapter_Abstract
      * function.
      *
      * @param  integer $size
-     * @throws TeamSpeak3_Adapter_FileTransfer_Exception
+     * @throws Ts3Exception
      * @return void
      */
     protected function passthru($size)
@@ -189,7 +189,7 @@ class TeamSpeak3_Adapter_FileTransfer extends TeamSpeak3_Adapter_Abstract
         $buff_size = fpassthru($this->getTransport()->getStream());
 
         if ($buff_size != $size) {
-            throw new TeamSpeak3_Adapter_FileTransfer_Exception(
+            throw new Ts3Exception(
                 "incomplete file download (" . intval($buff_size) . " of " . $size . " bytes)"
             );
         }

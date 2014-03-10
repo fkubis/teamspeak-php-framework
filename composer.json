@@ -3,6 +3,7 @@
     "type": "library",
     "description": "Clone of TS3 PHP Framework 1.1.23 providing the library as composer project.",
     "keywords": ["teamspeak3"],
+    "minimum-stability": "dev",
     "homepage": "https://github.com/FKubisAranox/teamspeak-php-framework",
     "license": "GPL2",
     "authors": [
@@ -15,7 +16,7 @@
         }
     ],
     "autoload": {
-        "psr-0": { "Teamspeak3\\": "." }
+        "psr-4": { "Teamspeak3\\": "." }
     },
     "require": {
         "php": ">=5.3.3"

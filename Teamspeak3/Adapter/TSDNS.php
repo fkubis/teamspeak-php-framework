@@ -27,17 +27,17 @@
 
 namespace Teamspeak3\Adapter;
 
-use Teamspeak3\Helper\TeamSpeak3_Helper_Profiler;
-use Teamspeak3\Helper\TeamSpeak3_Helper_Signal;
-use Teamspeak3\Transport\TeamSpeak3_Transport_Abstract;
-use Teamspeak3\Adapter\TSDNS\TeamSpeak3_Adapter_TSDNS_Exception;
-use Teamspeak3\Helper\TeamSpeak3_Helper_String;
+use Teamspeak3\Helper\Profiler;
+use Teamspeak3\Helper\Signal;
+use Teamspeak3\Transport\AbstractTransport;
+use Teamspeak3\Adapter\TSDNS\Ts3Exception;
+use Teamspeak3\Helper\String;
 
 /**
- * @class TeamSpeak3_Adapter_TSDNS
+ * @class TSDNS
  * @brief Provides methods to query a TSDNS server.
  */
-class TeamSpeak3_Adapter_TSDNS extends TeamSpeak3_Adapter_Abstract
+class TSDNS extends AbstractAdapter
 {
     /**
      * The TCP port number used by any TSDNS server.
@@ -47,10 +47,10 @@ class TeamSpeak3_Adapter_TSDNS extends TeamSpeak3_Adapter_Abstract
     protected $default_port = 41144;
 
     /**
-     * Connects the TeamSpeak3_Transport_Abstract object and performs initial actions on the remote
+     * Connects the AbstractTransport object and performs initial actions on the remote
      * server.
      *
-     * @throws TeamSpeak3_Adapter_Exception
+     * @throws Ts3Exception
      * @return void
      */
     public function syn()
@@ -62,19 +62,19 @@ class TeamSpeak3_Adapter_TSDNS extends TeamSpeak3_Adapter_Abstract
         $this->initTransport($this->options);
         $this->transport->setAdapter($this);
 
-        TeamSpeak3_Helper_Profiler::init(spl_object_hash($this));
+        Profiler::init(spl_object_hash($this));
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("tsdnsConnected", $this);
+        Signal::getInstance()->emit("tsdnsConnected", $this);
     }
 
     /**
-     * The TeamSpeak3_Adapter_FileTransfer destructor.
+     * The FileTransfer destructor.
      *
      * @return void
      */
     public function __destruct()
     {
-        if ($this->getTransport() instanceof TeamSpeak3_Transport_Abstract && $this->getTransport()->isConnected()) {
+        if ($this->getTransport() instanceof AbstractTransport && $this->getTransport()->isConnected()) {
             $this->getTransport()->disconnect();
         }
     }
@@ -83,8 +83,8 @@ class TeamSpeak3_Adapter_TSDNS extends TeamSpeak3_Adapter_Abstract
      * Queries the TSDNS server for a specified virtual hostname and returns the result.
      *
      * @param  string $tsdns
-     * @throws TeamSpeak3_Adapter_TSDNS_Exception
-     * @return TeamSpeak3_Helper_String
+     * @throws Ts3Exception
+     * @return String
      */
     public function resolve($tsdns)
     {
@@ -93,10 +93,10 @@ class TeamSpeak3_Adapter_TSDNS extends TeamSpeak3_Adapter_Abstract
         $this->getTransport()->disconnect();
 
         if ($repl->section(":", 0)->toInt() == 404) {
-            throw new TeamSpeak3_Adapter_TSDNS_Exception("unable to resolve TSDNS hostname (" . $tsdns . ")");
+            throw new Ts3Exception("unable to resolve TSDNS hostname (" . $tsdns . ")");
         }
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("tsdnsResolved", $tsdns, $repl);
+        Signal::getInstance()->emit("tsdnsResolved", $tsdns, $repl);
 
         return $repl;
     }

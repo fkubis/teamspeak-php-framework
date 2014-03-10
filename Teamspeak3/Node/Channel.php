@@ -28,21 +28,21 @@
 namespace Teamspeak3\Node;
 
 /**
- * @class TeamSpeak3_Node_Channel
+ * @class Channel
  * @brief Class describing a TeamSpeak 3 channel and all it's parameters.
  */
-class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
+class Channel extends AbstractNode
 {
     /**
-     * The TeamSpeak3_Node_Channel constructor.
+     * The Channel constructor.
      *
-     * @param  TeamSpeak3_Node_Server $server
+     * @param  Server $server
      * @param  array $info
      * @param  string $index
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Channel
+     * @return Channel
      */
-    public function __construct(TeamSpeak3_Node_Server $server, array $info, $index = "cid")
+    public function __construct(Server $server, array $info, $index = "cid")
     {
         $this->parent = $server;
         $this->nodeInfo = $info;
@@ -55,7 +55,7 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns an array filled with TeamSpeak3_Node_Channel objects.
+     * Returns an array filled with Channel objects.
      *
      * @param  array $filter
      * @return array
@@ -74,11 +74,11 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Channel object matching the given ID.
+     * Returns the Channel object matching the given ID.
      *
      * @param  integer $cid
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Channel
+     * @return Channel
      */
     public function subChannelGetById($cid)
     {
@@ -90,11 +90,11 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Channel object matching the given name.
+     * Returns the Channel object matching the given name.
      *
      * @param  integer $name
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Channel
+     * @return Channel
      */
     public function subChannelGetByName($name)
     {
@@ -108,7 +108,7 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns an array filled with TeamSpeak3_Node_Client objects.
+     * Returns an array filled with Client objects.
      *
      * @param  array $filter
      * @return array
@@ -127,11 +127,11 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Client object matching the given ID.
+     * Returns the Client object matching the given ID.
      *
      * @param  integer $clid
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Client
+     * @return Client
      */
     public function clientGetById($clid)
     {
@@ -143,11 +143,11 @@ class TeamSpeak3_Node_Channel extends TeamSpeak3_Node_Abstract
     }
 
     /**
-     * Returns the TeamSpeak3_Node_Client object matching the given name.
+     * Returns the Client object matching the given name.
      *
      * @param  integer $name
      * @throws TeamSpeak3_Adapter_ServerQuery_Exception
-     * @return TeamSpeak3_Node_Client
+     * @return Client
      */
     public function clientGetByName($name)
     {

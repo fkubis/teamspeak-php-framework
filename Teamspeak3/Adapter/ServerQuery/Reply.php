@@ -27,38 +27,38 @@
 
 namespace Teamspeak3\Adapter\ServerQuery;
 
-use Teamspeak3\Helper\TeamSpeak3_Helper_String;
-use Teamspeak3\Node\TeamSpeak3_Node_Host;
+use Teamspeak3\Helper\String;
+use Teamspeak3\Node\Host;
 use Teamspeak3\TeamSpeak3;
-use Teamspeak3\Adapter\ServerQuery\TeamSpeak3_Adapter_ServerQuery_Exception;
-use Teamspeak3\Helper\TeamSpeak3_Helper_Signal;
+use Teamspeak3\Adapter\ServerQuery\Ts3Exception;
+use Teamspeak3\Helper\Signal;
 use \ArrayObject;
 
 
     /**
- * @class TeamSpeak3_Adapter_ServerQuery_Reply
+ * @class Reply
  * @brief Provides methods to analyze and format a ServerQuery reply.
  */
-class TeamSpeak3_Adapter_ServerQuery_Reply
+class Reply
 {
     /**
      * Stores the command used to get this reply.
      *
-     * @var TeamSpeak3_Helper_String
+     * @var String
      */
     protected $cmd = null;
 
     /**
      * Stores the servers reply (if available).
      *
-     * @var TeamSpeak3_Helper_String
+     * @var String
      */
     protected $rpl = null;
 
     /**
-     * Stores connected TeamSpeak3_Node_Host object.
+     * Stores connected Host object.
      *
-     * @var TeamSpeak3_Node_Host
+     * @var Host
      */
     protected $con = null;
 
@@ -84,17 +84,17 @@ class TeamSpeak3_Adapter_ServerQuery_Reply
     protected $exp = true;
 
     /**
-     * Creates a new TeamSpeak3_Adapter_ServerQuery_Reply object.
+     * Creates a new Reply object.
      *
      * @param  array $rpl
      * @param  string $cmd
      * @param  boolean $exp
-     * @param  TeamSpeak3_Node_Host $con
-     * @return TeamSpeak3_Adapter_ServerQuery_Reply
+     * @param  Host $con
+     * @return Reply
      */
-    public function __construct(array $rpl, $cmd = null, TeamSpeak3_Node_Host $con = null, $exp = true)
+    public function __construct(array $rpl, $cmd = null, Host $con = null, $exp = true)
     {
-        $this->cmd = new TeamSpeak3_Helper_String($cmd);
+        $this->cmd = new String($cmd);
         $this->con = $con;
         $this->exp = (bool)$exp;
 
@@ -103,9 +103,9 @@ class TeamSpeak3_Adapter_ServerQuery_Reply
     }
 
     /**
-     * Returns the reply as an TeamSpeak3_Helper_String object.
+     * Returns the reply as an String object.
      *
-     * @return TeamSpeak3_Helper_String
+     * @return String
      */
     public function toString()
     {
@@ -193,7 +193,7 @@ class TeamSpeak3_Adapter_ServerQuery_Reply
      * The identifier specified by key will be used while indexing the array.
      *
      * @param  $ident
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return array
      */
     public function toAssocArray($ident)
@@ -205,7 +205,7 @@ class TeamSpeak3_Adapter_ServerQuery_Reply
             if (array_key_exists($ident, $node)) {
                 $array[(is_object($node[$ident])) ? $node[$ident]->toString() : $node[$ident]] = $node;
             } else {
-                throw new TeamSpeak3_Adapter_ServerQuery_Exception("invalid parameter", 0x602);
+                throw new Ts3Exception("invalid parameter", 0x602);
             }
         }
 
@@ -247,11 +247,11 @@ class TeamSpeak3_Adapter_ServerQuery_Reply
     /**
      * Returns the command used to get this reply.
      *
-     * @return TeamSpeak3_Helper_String
+     * @return String
      */
     public function getCommandString()
     {
-        return new TeamSpeak3_Helper_String($this->cmd);
+        return new String($this->cmd);
     }
 
     /**
@@ -277,11 +277,11 @@ class TeamSpeak3_Adapter_ServerQuery_Reply
     }
 
     /**
-     * Parses a ServerQuery error and throws a TeamSpeak3_Adapter_ServerQuery_Exception object if
+     * Parses a ServerQuery error and throws a Ts3Exception object if
      * there's an error.
      *
      * @param  string $err
-     * @throws TeamSpeak3_Adapter_ServerQuery_Exception
+     * @throws Ts3Exception
      * @return void
      */
     protected function fetchError($err)
@@ -294,7 +294,7 @@ class TeamSpeak3_Adapter_ServerQuery_Reply
             $this->err[$ident->toString()] = $value->isInt() ? $value->toInt() : $value->unescape();
         }
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("notifyError", $this);
+        Signal::getInstance()->emit("notifyError", $this);
 
         if ($this->getErrorProperty("id", 0x00) != 0x00 && $this->exp) {
             if ($permid = $this->getErrorProperty("failed_permid")) {
@@ -311,7 +311,7 @@ class TeamSpeak3_Adapter_ServerQuery_Reply
                 $suffix = "";
             }
 
-            throw new TeamSpeak3_Adapter_ServerQuery_Exception(
+            throw new Ts3Exception(
                 $this->getErrorProperty("msg") . $suffix,
                 $this->getErrorProperty("id")
             );
@@ -319,7 +319,7 @@ class TeamSpeak3_Adapter_ServerQuery_Reply
     }
 
     /**
-     * Parses a ServerQuery reply and creates a TeamSpeak3_Helper_String object.
+     * Parses a ServerQuery reply and creates a String object.
      *
      * @param  string $rpl
      * @return void
@@ -330,11 +330,11 @@ class TeamSpeak3_Adapter_ServerQuery_Reply
             if ($val->startsWith(TeamSpeak3::GREET)) {
                 unset($rpl[$key]);
             } elseif ($val->startsWith(TeamSpeak3::EVENT)) {
-                $this->evt[] = new TeamSpeak3_Adapter_ServerQuery_Event($rpl[$key], $this->con);
+                $this->evt[] = new Event($rpl[$key], $this->con);
                 unset($rpl[$key]);
             }
         }
 
-        $this->rpl = new TeamSpeak3_Helper_String(implode(TeamSpeak3::SEPARATOR_LIST, $rpl));
+        $this->rpl = new String(implode(TeamSpeak3::SEPARATOR_LIST, $rpl));
     }
 }

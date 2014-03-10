@@ -28,15 +28,15 @@
 namespace Teamspeak3\Transport;
 
 /**
- * @class TeamSpeak3_Transport_UDP
+ * @class UDP
  * @brief Class for connecting to a remote server through UDP.
  */
-class TeamSpeak3_Transport_UDP extends TeamSpeak3_Transport_Abstract
+class UDP extends AbstractTransport
 {
     /**
      * Connects to a remote server.
      *
-     * @throws TeamSpeak3_Transport_Exception
+     * @throws Ts3Exception
      * @return void
      */
     public function connect()
@@ -54,7 +54,7 @@ class TeamSpeak3_Transport_UDP extends TeamSpeak3_Transport_Abstract
         $this->stream = @stream_socket_client($address, $errno, $errstr, $timeout);
 
         if ($this->stream === false) {
-            throw new TeamSpeak3_Transport_Exception(
+            throw new Ts3Exception(
                 TeamSpeak3_Helper_String::factory($errstr)->toUtf8()->toString(),
                 $errno
             );
@@ -84,7 +84,7 @@ class TeamSpeak3_Transport_UDP extends TeamSpeak3_Transport_Abstract
      * Reads data from the stream.
      *
      * @param  integer $length
-     * @throws TeamSpeak3_Transport_Exception
+     * @throws Ts3Exception
      * @return TeamSpeak3_Helper_String
      */
     public function read($length = 4096)
@@ -97,7 +97,7 @@ class TeamSpeak3_Transport_UDP extends TeamSpeak3_Transport_Abstract
         TeamSpeak3_Helper_Signal::getInstance()->emit(strtolower($this->getAdapterType()) . "DataRead", $data);
 
         if ($data === false) {
-            throw new TeamSpeak3_Transport_Exception(
+            throw new Ts3Exception(
                 "connection to server '" . $this->config["host"] . ":" . $this->config["port"] . "' lost"
             );
         }

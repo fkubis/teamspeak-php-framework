@@ -28,10 +28,10 @@
 namespace Teamspeak3\Helper\Signal;
 
 /**
- * @class TeamSpeak3_Helper_Signal_Handler
+ * @class Handler
  * @brief Helper class providing handler functions for signals.
  */
-class TeamSpeak3_Helper_Signal_Handler
+class Handler
 {
     /**
      * Stores the name of the subscribed signal.
@@ -48,19 +48,19 @@ class TeamSpeak3_Helper_Signal_Handler
     protected $callback = null;
 
     /**
-     * The TeamSpeak3_Helper_Signal_Handler constructor.
+     * The Handler constructor.
      *
      * @param  string $signal
      * @param  mixed $callback
-     * @throws TeamSpeak3_Helper_Signal_Exception
-     * @return TeamSpeak3_Helper_Signal_Handler
+     * @throws Ts3Exception
+     * @return Handler
      */
     public function __construct($signal, $callback)
     {
         $this->signal = (string)$signal;
 
         if (!is_callable($callback)) {
-            throw new TeamSpeak3_Helper_Signal_Exception("invalid callback specified for signal '" . $signal . "'");
+            throw new Ts3Exception("invalid callback specified for signal '" . $signal . "'");
         }
 
         $this->callback = $callback;
