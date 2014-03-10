@@ -17,7 +17,6 @@
     "autoload": {
         "psr-0": { "Teamspeak3": "." }
     },
-    "target-dir" : "Vendor/Teamspeak3",
     "require": {
         "php": ">=5.3.3"
     }
