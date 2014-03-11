@@ -1,7 +1,7 @@
 Introduction
 ============
 
-Clone of [TS3 PHP Framework 1.1.23](https://www.planetteamspeak.com/) providing the library as composer project.
+Clone of [TS3 PHP Framework 1.1.23](https://www.planetteamspeak.com/) providing the library as composer project including namespaces and follow the PSR-4 Standard.
 
 
 Usage
