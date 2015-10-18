@@ -27,6 +27,8 @@
 
 namespace TeamSpeak3\Node;
 
+use TeamSpeak3\TeamSpeak3;
+
 /**
  * @class Client
  * @brief Class describing a TeamSpeak 3 client and all it's parameters.
