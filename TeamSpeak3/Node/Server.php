@@ -1390,7 +1390,7 @@ class Server extends AbstractNode
             $this->cgroupList = $this->request("channelgrouplist")->toAssocArray("cgid");
 
             foreach ($this->cgroupList as $cgid => $group) {
-                $this->cgroupList[$cgid] = new Channelgroug($this, $group);
+                $this->cgroupList[$cgid] = new Channelgroup($this, $group);
             }
 
             uasort($this->cgroupList, array(__CLASS__, "sortGroupList"));
@@ -1480,11 +1480,11 @@ class Server extends AbstractNode
     }
 
     /**
-     * Returns the Channelgroug object matching the given ID.
+     * Returns the Channelgroup object matching the given ID.
      *
      * @param  integer $cgid
      * @throws Ts3Exception
-     * @return Channelgroug
+     * @return Channelgroup
      */
     public function channelGroupGetById($cgid)
     {
@@ -1496,12 +1496,12 @@ class Server extends AbstractNode
     }
 
     /**
-     * Returns the Channelgroug object matching the given name.
+     * Returns the Channelgroup object matching the given name.
      *
      * @param  string $name
      * @param  integer $type
      * @throws Ts3Exception
-     * @return Channelgroug
+     * @return Channelgroup
      */
     public function channelGroupGetByName($name, $type = TeamSpeak3::GROUP_DBTYPE_REGULAR)
     {
@@ -2482,7 +2482,7 @@ class Server extends AbstractNode
             throw new Ts3Exception("invalid parameter", 0x602);
         }
 
-        if (!$a instanceof Servergroup && !$a instanceof Channelgroug) {
+        if (!$a instanceof Servergroup && !$a instanceof Channelgroup) {
             return 0;
 
             /* workaround for PHP bug #50688 */
