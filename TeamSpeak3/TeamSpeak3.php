@@ -39,7 +39,7 @@ use TeamSpeak3\Helper\String;
 use TeamSpeak3\Helper\Profiler;
 use TeamSpeak3\Node\AbstractNode;
 use TeamSpeak3\Node\Channel;
-use TeamSpeak3\Node\Channelgroug;
+use TeamSpeak3\Node\Channelgroup;
 use TeamSpeak3\Node\Client;
 use TeamSpeak3\Node\Host;
 use TeamSpeak3\Node\Server;
