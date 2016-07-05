@@ -27,7 +27,7 @@
 
 namespace TeamSpeak3\Adapter\ServerQuery;
 
-use TeamSpeak3\Helper\String;
+use TeamSpeak3\Helper\StringHelper;
 use TeamSpeak3\Node\Host;
 use TeamSpeak3\TeamSpeak3;
 use TeamSpeak3\Ts3Exception;
@@ -94,7 +94,7 @@ class Reply
      */
     public function __construct(array $rpl, $cmd = null, Host $con = null, $exp = true)
     {
-        $this->cmd = new String($cmd);
+        $this->cmd = new StringHelper($cmd);
         $this->con = $con;
         $this->exp = (bool)$exp;
 
@@ -251,7 +251,7 @@ class Reply
      */
     public function getCommandString()
     {
-        return new String($this->cmd);
+        return new StringHelper($this->cmd);
     }
 
     /**
@@ -335,6 +335,6 @@ class Reply
             }
         }
 
-        $this->rpl = new String(implode(TeamSpeak3::SEPARATOR_LIST, $rpl));
+        $this->rpl = new StringHelper(implode(TeamSpeak3::SEPARATOR_LIST, $rpl));
     }
 }

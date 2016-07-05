@@ -35,7 +35,7 @@ use TeamSpeak3\Node\Host;
 use TeamSpeak3\Helper\Profiler;
 use TeamSpeak3\Helper\Signal;
 use TeamSpeak3\Transport\AbstractTransport;
-use TeamSpeak3\Helper\String;
+use TeamSpeak3\Helper\StringHelper;
 use TeamSpeak3\Node\AbstractNode;
 
 /**
@@ -120,7 +120,7 @@ class ServerQuery extends AbstractAdapter
      */
     public function request($cmd, $throw = true)
     {
-        $query = String::factory($cmd)->section(TeamSpeak3::SEPARATOR_CELL);
+        $query = StringHelper::factory($cmd)->section(TeamSpeak3::SEPARATOR_CELL);
 
         if (strstr($cmd, "\r") || strstr($cmd, "\n")) {
             throw new Ts3Exception("illegal characters in command '" . $query . "'");
@@ -140,7 +140,7 @@ class ServerQuery extends AbstractAdapter
         do {
             $str = $this->getTransport()->readLine();
             $rpl[] = $str;
-        } while ($str instanceof String && $str->section(
+        } while ($str instanceof StringHelper && $str->section(
                 TeamSpeak3::SEPARATOR_CELL
             ) != TeamSpeak3::ERROR);
 
@@ -167,7 +167,7 @@ class ServerQuery extends AbstractAdapter
 
         do {
             $evt = $this->getTransport()->readLine();
-        } while ($evt instanceof String && !$evt->section(TeamSpeak3::SEPARATOR_CELL)->startsWith(
+        } while ($evt instanceof StringHelper && !$evt->section(TeamSpeak3::SEPARATOR_CELL)->startsWith(
                 TeamSpeak3::EVENT
             ));
 
@@ -203,7 +203,7 @@ class ServerQuery extends AbstractAdapter
                         $value[$i] = $value[$i]->getId();
                     }
 
-                    $cells[$i][] = $ident . String::factory($value[$i])->escape()->toUtf8();
+                    $cells[$i][] = $ident . StringHelper::factory($value[$i])->escape()->toUtf8();
                 }
             } else {
                 if ($value === null) {
@@ -216,7 +216,7 @@ class ServerQuery extends AbstractAdapter
                     $value = $value->getId();
                 }
 
-                $args[] = $ident . String::factory($value)->escape()->toUtf8();
+                $args[] = $ident . StringHelper::factory($value)->escape()->toUtf8();
             }
         }
 

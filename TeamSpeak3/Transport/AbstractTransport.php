@@ -28,7 +28,7 @@
 namespace TeamSpeak3\Transport;
 
 use TeamSpeak3\Helper\Signal;
-use TeamSpeak3\Helper\String;
+use TeamSpeak3\Helper\StringHelper;
 use TeamSpeak3\Ts3Exception;
 use TeamSpeak3\Adapter\AbstractAdapter;
 
@@ -212,7 +212,7 @@ abstract class AbstractTransport
     public function getAdapterType()
     {
         if ($this->adapter instanceof AbstractAdapter) {
-            $string = String::factory(get_class($this->adapter));
+            $string = StringHelper::factory(get_class($this->adapter));
 
             return $string->substr($string->findLast("_"))->replace(array("_", " "), "")->toString();
         }

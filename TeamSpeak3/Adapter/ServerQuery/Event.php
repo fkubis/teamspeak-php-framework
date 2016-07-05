@@ -27,7 +27,7 @@
 
 namespace TeamSpeak3\Adapter\ServerQuery;
 
-use TeamSpeak3\Helper\String;
+use TeamSpeak3\Helper\StringHelper;
 use TeamSpeak3\Node\Host;
 use TeamSpeak3\TeamSpeak3;
 use TeamSpeak3\Helper\Signal;
@@ -70,7 +70,7 @@ class Event implements ArrayAccess
      * @throws Ts3Exception
      * @return Event
      */
-    public function __construct(String $evt, Host $con = null)
+    public function __construct(StringHelper $evt, Host $con = null)
     {
         if (!$evt->startsWith(TeamSpeak3::EVENT)) {
             throw new Ts3Exception("invalid notification event format");
@@ -82,7 +82,7 @@ class Event implements ArrayAccess
             throw new Ts3Exception("invalid notification event data");
         }
 
-        $fake = new String(
+        $fake = new StringHelper(
             TeamSpeak3::ERROR . TeamSpeak3::SEPARATOR_CELL . "id" . TeamSpeak3::SEPARATOR_PAIR . 0 . TeamSpeak3::SEPARATOR_CELL . "msg" . TeamSpeak3::SEPARATOR_PAIR . "ok"
         );
         $repl = new Reply(array($data, $fake), $type);

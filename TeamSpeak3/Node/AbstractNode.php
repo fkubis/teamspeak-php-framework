@@ -33,7 +33,7 @@ use \Countable;
 use TeamSpeak3\Adapter\ServerQuery\Reply;
 use TeamSpeak3\Adapter\ServerQuery;
 use TeamSpeak3\Helper\Convert;
-use TeamSpeak3\Helper\String;
+use TeamSpeak3\Helper\StringHelper;
 use TeamSpeak3\Ts3Exception;
 use TeamSpeak3\Viewer\IViewer;
 
@@ -151,7 +151,7 @@ abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
     {
         $iconid = ($this[$key] < 0) ? (pow(2, 32)) - ($this[$key] * -1) : $this[$key];
 
-        return new String("/icon_" . $iconid);
+        return new StringHelper("/icon_" . $iconid);
     }
 
     /**
@@ -168,7 +168,7 @@ abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
             return $prefix . "query";
         }
 
-        return $prefix . String::factory(get_class($this))->section("_", 2)->toLower();
+        return $prefix . StringHelper::factory(get_class($this))->section("_", 2)->toLower();
     }
 
     /**
@@ -239,7 +239,7 @@ abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
                 $match = true;
 
                 foreach ($props as $key => $val) {
-                    if ($val instanceof String) {
+                    if ($val instanceof StringHelper) {
                         $match = $val->contains($rules[$key], true);
                     } else {
                         $match = $val == $rules[$key];
@@ -273,7 +273,7 @@ abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
             $info = $this->nodeInfo;
 
             foreach ($info as $key => $val) {
-                $key = String::factory($key);
+                $key = StringHelper::factory($key);
 
                 if ($key->contains("_bytes_")) {
                     $info[$key->toString()] = Convert::bytes($val);

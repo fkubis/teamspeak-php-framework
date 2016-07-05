@@ -31,7 +31,7 @@ use TeamSpeak3\Adapter\ServerQuery;
 use TeamSpeak3\Helper\Convert;
 use TeamSpeak3\Helper\Crypt;
 use TeamSpeak3\Helper\Signal;
-use TeamSpeak3\Helper\String;
+use TeamSpeak3\Helper\StringHelper;
 use TeamSpeak3\Helper\Uri;
 use TeamSpeak3\TeamSpeak3;
 use TeamSpeak3\Ts3Exception;
@@ -333,7 +333,7 @@ class Host extends AbstractNode
     public function serverGetByTSDNS($tsdns)
     {
         $parts = Uri::getFQDNParts($tsdns);
-        $query = String::factory(array_shift($parts));
+        $query = StringHelper::factory(array_shift($parts));
 
         while ($part = array_shift($parts)) {
             $query->prepend($part);
@@ -557,7 +557,7 @@ class Host extends AbstractNode
         foreach ($this->permissionCats() as $key => $val) {
             $permtree[$val]["permcatid"] = $val;
             $permtree[$val]["permcathex"] = "0x" . dechex($val);
-            $permtree[$val]["permcatname"] = String::factory(
+            $permtree[$val]["permcatname"] = StringHelper::factory(
                 Convert::permissionCategory($val)
             );
             $permtree[$val]["permcatparent"] = $permtree[$val]["permcathex"]{3} == 0 ? 0 : hexdec(
@@ -896,7 +896,7 @@ class Host extends AbstractNode
     {
         $this->whoami();
 
-        $this->whoami[$ident] = (is_numeric($value)) ? intval($value) : String::factory($value);
+        $this->whoami[$ident] = (is_numeric($value)) ? intval($value) : StringHelper::factory($value);
     }
 
     /**
@@ -981,7 +981,7 @@ class Host extends AbstractNode
         $reflects = new \ReflectionClass("TeamSpeak3");
 
         foreach ($reflects->getConstants() as $key => $val) {
-            if (!String::factory($key)->startsWith("PERM_CAT") || $val == 0xFF) {
+            if (!StringHelper::factory($key)->startsWith("PERM_CAT") || $val == 0xFF) {
                 continue;
             }
 

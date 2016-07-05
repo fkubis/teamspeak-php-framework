@@ -31,7 +31,7 @@ use TeamSpeak3\Helper\Profiler;
 use TeamSpeak3\Helper\Signal;
 use TeamSpeak3\Transport\AbstractTransport;
 use TeamSpeak3\Ts3Exception;
-use TeamSpeak3\Helper\String;
+use TeamSpeak3\Helper\StringHelper;
 
 /**
  * @class TSDNS

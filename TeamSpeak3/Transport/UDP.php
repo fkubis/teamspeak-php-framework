@@ -28,7 +28,7 @@
 namespace TeamSpeak3\Transport;
 
 use TeamSpeak3\Helper\Signal;
-use TeamSpeak3\Helper\String;
+use TeamSpeak3\Helper\StringHelper;
 use TeamSpeak3\Ts3Exception;
 
 /**
@@ -59,7 +59,7 @@ class UDP extends AbstractTransport
 
         if ($this->stream === false) {
             throw new Ts3Exception(
-                String::factory($errstr)->toUtf8()->toString(),
+                StringHelper::factory($errstr)->toUtf8()->toString(),
                 $errno
             );
         }
@@ -106,7 +106,7 @@ class UDP extends AbstractTransport
             );
         }
 
-        return new String($data);
+        return new StringHelper($data);
     }
 
     /**

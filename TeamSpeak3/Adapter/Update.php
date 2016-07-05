@@ -30,7 +30,7 @@ namespace TeamSpeak3\Adapter;
 use TeamSpeak3\Ts3Exception;
 use TeamSpeak3\Helper\Profiler;
 use TeamSpeak3\Helper\Signal;
-use TeamSpeak3\Helper\String;
+use TeamSpeak3\Helper\StringHelper;
 use TeamSpeak3\Transport\AbstractTransport;
 
 
@@ -89,7 +89,7 @@ class Update extends AbstractAdapter
 
         Profiler::init(spl_object_hash($this));
 
-        $this->getTransport()->send(String::fromHex(33));
+        $this->getTransport()->send(StringHelper::fromHex(33));
 
         if (!preg_match_all(
                 "/,?(\d+)#([0-9a-zA-Z\._-]+),?/",

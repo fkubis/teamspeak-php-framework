@@ -35,7 +35,7 @@ use TeamSpeak3\Adapter\ServerQuery;
 use TeamSpeak3\Adapter\TSDNS;
 use TeamSpeak3\Adapter\Update;
 use TeamSpeak3\Helper\Uri;
-use TeamSpeak3\Helper\String;
+use TeamSpeak3\Helper\StringHelper;
 use TeamSpeak3\Helper\Profiler;
 use TeamSpeak3\Node\AbstractNode;
 use TeamSpeak3\Node\Channel;
@@ -480,7 +480,7 @@ class TeamSpeak3
         $scan = scandir($path);
 
         foreach ($scan as $node) {
-            $file = String::factory($node)->toLower();
+            $file = StringHelper::factory($node)->toLower();
 
             if ($file->startsWith($name) && $file->endsWith(".php")) {
                 return str_replace(".php", "", "TeamSpeak3\\Adapter\\" . $node);
