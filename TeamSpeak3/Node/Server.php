@@ -28,6 +28,7 @@
 namespace TeamSpeak3\Node;
 
 use TeamSpeak3\Adapter\ServerQuery\Reply;
+use TeamSpeak3\Helper\Signal;
 use TeamSpeak3\Helper\String;
 use TeamSpeak3\TeamSpeak3;
 use TeamSpeak3\Ts3Exception;
@@ -1600,7 +1601,7 @@ class Server extends AbstractNode
     {
         $token = $this->request("permreset")->toList();
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("notifyTokencreated", $this, $token["token"]);
+        Signal::getInstance()->emit("notifyTokencreated", $this, $token["token"]);
 
         return $token["token"];
     }
@@ -1689,7 +1690,7 @@ class Server extends AbstractNode
             $upload["host"] = $upload["ip"];
         }
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("filetransferUploadInit", $upload["ftkey"], $upload);
+        Signal::getInstance()->emit("filetransferUploadInit", $upload["ftkey"], $upload);
 
         return $upload;
     }
@@ -1727,7 +1728,7 @@ class Server extends AbstractNode
             $download["host"] = $download["ip"];
         }
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("filetransferDownloadInit", $download["ftkey"], $download);
+        Signal::getInstance()->emit("filetransferDownloadInit", $download["ftkey"], $download);
 
         return $download;
     }
@@ -1922,7 +1923,7 @@ class Server extends AbstractNode
         $detail = $this->request("serversnapshotdeploy " . $data)->toList();
 
         if (array_key_exists("sid", $detail)) {
-            TeamSpeak3_Helper_Signal::getInstance()->emit("notifyServercreated", $this->getParent(), $detail["sid"]);
+            Signal::getInstance()->emit("notifyServercreated", $this->getParent(), $detail["sid"]);
         }
 
         return $detail;
@@ -2049,7 +2050,7 @@ class Server extends AbstractNode
             )
         )->toList();
 
-        TeamSpeak3_Helper_Signal::getInstance()->emit("notifyTokencreated", $this, $token["token"]);
+        Signal::getInstance()->emit("notifyTokencreated", $this, $token["token"]);
 
         return $token["token"];
     }
