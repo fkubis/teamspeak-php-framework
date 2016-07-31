@@ -168,7 +168,7 @@ abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
             return $prefix . "query";
         }
 
-        return $prefix . StringHelper::factory(get_class($this))->section("_", 2)->toLower();
+        return $prefix . StringHelper::factory(get_class($this))->toLower();
     }
 
     /**
