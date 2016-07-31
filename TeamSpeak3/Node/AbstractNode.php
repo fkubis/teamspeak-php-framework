@@ -90,7 +90,7 @@ abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
      *
      * @param  string $cmd
      * @param  array $params
-     * @return String
+     * @return StringHelper
      */
     public function prepare($cmd, array $params = array())
     {
@@ -145,7 +145,7 @@ abstract class AbstractNode implements RecursiveIterator, ArrayAccess, Countable
      * Returns the internal path of the node icon.
      *
      * @param  string $key
-     * @return String
+     * @return StringHelper
      */
     public function iconGetName($key)
     {
