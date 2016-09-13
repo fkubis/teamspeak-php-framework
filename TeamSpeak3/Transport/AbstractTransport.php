@@ -145,7 +145,7 @@ abstract class AbstractTransport
      *
      * @param  integer $length
      * @throws Ts3Exception
-     * @return String
+     * @return StringHelper
      */
     abstract public function read($length = 4096);
 

@@ -89,7 +89,7 @@ class TCP extends AbstractTransport
      *
      * @param  integer $length
      * @throws Ts3Exception
-     * @return String
+     * @return StringHelper
      */
     public function read($length = 4096)
     {
@@ -114,7 +114,7 @@ class TCP extends AbstractTransport
      *
      * @param  string $token
      * @throws Ts3Exception
-     * @return String
+     * @return StringHelper
      */
     public function readLine($token = "\n")
     {
