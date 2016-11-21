@@ -191,7 +191,7 @@ abstract class AbstractTransport
      */
     public function setAdapter(AbstractAdapter $adapter)
     {
-        $this->adapter = $adapter;
+        $this->adapter = get_class($adapter);
     }
 
     /**
@@ -212,7 +212,7 @@ abstract class AbstractTransport
     public function getAdapterType()
     {
         if ($this->adapter instanceof AbstractAdapter) {
-            $string = StringHelper::factory(get_class($this->adapter));
+            $string = StringHelper::factory($this->adapter);
 
             return $string->substr($string->findLast("_"))->replace(array("_", " "), "")->toString();
         }
