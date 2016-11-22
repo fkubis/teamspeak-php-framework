@@ -214,7 +214,7 @@ abstract class AbstractTransport
         if ($this->adapter instanceof AbstractAdapter) {
             $string = StringHelper::factory($this->adapter);
 
-            return $string->substr($string->findLast("_"))->replace(array("_", " "), "")->toString();
+            return $string->substr($string->findLast("\\"))->replace(array("\\", " "), "")->toString();
         }
 
         return "Unknown";
