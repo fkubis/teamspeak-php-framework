@@ -28,12 +28,18 @@
 namespace TeamSpeak3;
 
 use TeamSpeak3\Adapter\AbstractAdapter;
+use TeamSpeak3\Adapter\Blacklist;
+use TeamSpeak3\Adapter\FileTransfer;
 use TeamSpeak3\Adapter\ServerQuery;
+use TeamSpeak3\Adapter\TSDNS;
+use TeamSpeak3\Adapter\Update;
 use TeamSpeak3\Helper\Uri;
 use TeamSpeak3\Helper\StringHelper;
 use TeamSpeak3\Helper\Profiler;
 use TeamSpeak3\Node\AbstractNode;
 use TeamSpeak3\Node\Server;
+
+
 use \LogicException;
 
 /**
