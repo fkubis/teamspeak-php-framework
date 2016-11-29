@@ -32,7 +32,6 @@ use \Iterator;
 use \Countable;
 use TeamSpeak3\TeamSpeak3;
 use TeamSpeak3\Ts3Exception;
-use TeamSpeak3\Helper\Signal;
 
 /**
  * @class String
