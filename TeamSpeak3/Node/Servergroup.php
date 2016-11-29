@@ -78,8 +78,6 @@ class Servergroup extends AbstractNode
     public function delete($force = false)
     {
         $this->getParent()->serverGroupDelete($this->getId(), $force);
-
-        unset($this);
     }
 
     /**
