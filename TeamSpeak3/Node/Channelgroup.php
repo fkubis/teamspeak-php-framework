@@ -176,7 +176,7 @@ class Channelgroup extends AbstractNode
      * @param  integer $cid
      * @param  string $description
      * @param  string $customset
-     * @return TeamSpeak3_Helper_String
+     * @return StringHelper
      */
     public function privilegeKeyCreate($cid, $description = null, $customset = null)
     {
@@ -215,7 +215,7 @@ class Channelgroup extends AbstractNode
     /**
      * Downloads and returns the channel groups icon file content.
      *
-     * @return TeamSpeak3_Helper_String
+     * @return StringHelper
      */
     public function iconDownload()
     {

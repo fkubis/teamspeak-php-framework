@@ -89,7 +89,7 @@ class UDP extends AbstractTransport
      *
      * @param  integer $length
      * @throws Ts3Exception
-     * @return TeamSpeak3_Helper_String
+     * @return StringHelper
      */
     public function read($length = 4096)
     {

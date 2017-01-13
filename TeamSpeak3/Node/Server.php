@@ -1345,7 +1345,7 @@ class Server extends AbstractNode
             foreach ($perms as $permsid => $perm) {
                 if (in_array($permsid, array_keys($profiles[$sgid]))) {
                     $profiles[$sgid][$permsid] = $perm["permvalue"];
-                } elseif (TeamSpeak3_Helper_String::factory($permsid)->startsWith("i_needed_modify_power_")) {
+                } elseif (StringHelper::factory($permsid)->startsWith("i_needed_modify_power_")) {
                     if (!$grant || $perm["permvalue"] > $grant) {
                         continue;
                     }
@@ -1595,7 +1595,7 @@ class Server extends AbstractNode
      * Restores the default permission settings on the virtual server and returns a new initial
      * administrator privilege key.
      *
-     * @return TeamSpeak3_Helper_String
+     * @return StringHelper
      */
     public function permReset()
     {
@@ -1759,7 +1759,7 @@ class Server extends AbstractNode
     /**
      * Downloads and returns the servers icon file content.
      *
-     * @return TeamSpeak3_Helper_String
+     * @return StringHelper
      */
     public function iconDownload()
     {
@@ -1908,15 +1908,15 @@ class Server extends AbstractNode
     {
         switch ($mode) {
             case TeamSpeak3::SNAPSHOT_BASE64:
-                $data = TeamSpeak3_Helper_String::fromBase64($data);
+                $data = StringHelper::fromBase64($data);
                 break;
 
             case TeamSpeak3::SNAPSHOT_HEXDEC:
-                $data = TeamSpeak3_Helper_String::fromHex($data);
+                $data = StringHelper::fromHex($data);
                 break;
 
             default:
-                $data = TeamSpeak3_Helper_String::factory($data);
+                $data = StringHelper::factory($data);
                 break;
         }
 
@@ -2030,7 +2030,7 @@ class Server extends AbstractNode
      * @param  integer $id2
      * @param  string $description
      * @param  string $customset
-     * @return TeamSpeak3_Helper_String
+     * @return StringHelper
      */
     public function privilegeKeyCreate(
         $type = TeamSpeak3::TOKEN_SERVERGROUP,
@@ -2385,7 +2385,7 @@ class Server extends AbstractNode
      * will be auto-generated.
      *
      * @param  string $username
-     * @return TeamSpeak3_Helper_String
+     * @return StringHelper
      */
     public function selfUpdateLogin($username)
     {

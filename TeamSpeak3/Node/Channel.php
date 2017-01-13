@@ -393,7 +393,7 @@ class Channel extends AbstractNode
     /**
      * Downloads and returns the channels icon file content.
      *
-     * @return TeamSpeak3_Helper_String
+     * @return StringHelper
      */
     public function iconDownload()
     {
