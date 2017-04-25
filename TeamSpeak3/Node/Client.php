@@ -27,6 +27,7 @@
 
 namespace TeamSpeak3\Node;
 
+use TeamSpeak3\Helper\StringHelper;
 use TeamSpeak3\TeamSpeak3;
 
 /**
@@ -280,17 +281,17 @@ class Client extends AbstractNode
     /**
      * Returns the possible name of the clients avatar.
      *
-     * @return TeamSpeak3_Helper_String
+     * @return StringHelper
      */
     public function avatarGetName()
     {
-        return new TeamSpeak3_Helper_String("/avatar_" . $this["client_base64HashClientUID"]);
+        return new StringHelper("/avatar_" . $this["client_base64HashClientUID"]);
     }
 
     /**
      * Downloads and returns the clients avatar file content.
      *
-     * @return TeamSpeak3_Helper_String
+     * @return StringHelper
      */
     public function avatarDownload()
     {
@@ -345,7 +346,7 @@ class Client extends AbstractNode
     /**
      * Downloads and returns the clients icon file content.
      *
-     * @return TeamSpeak3_Helper_String
+     * @return StringHelper
      */
     public function iconDownload()
     {
