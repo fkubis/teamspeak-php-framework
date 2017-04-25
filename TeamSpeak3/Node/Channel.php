@@ -453,8 +453,6 @@ class Channel extends AbstractNode
     public function delete($force = false)
     {
         $this->getParent()->channelDelete($this->getId(), $force);
-
-        unset($this);
     }
 
     /**

@@ -2326,8 +2326,6 @@ class Server extends AbstractNode
     public function delete()
     {
         $this->getParent()->serverDelete($this->getId());
-
-        unset($this);
     }
 
     /**

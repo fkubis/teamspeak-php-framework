@@ -27,7 +27,6 @@
 
 namespace TeamSpeak3\Adapter;
 
-use TeamSpeak3\Adapter\AbstractAdapter;
 use TeamSpeak3\Helper\Profiler;
 use TeamSpeak3\Helper\Signal;
 use TeamSpeak3\Transport\AbstractTransport;

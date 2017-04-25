@@ -77,8 +77,6 @@ class Channelgroup extends AbstractNode
     public function delete($force = false)
     {
         $this->getParent()->channelGroupDelete($this->getId(), $force);
-
-        unset($this);
     }
 
     /**
